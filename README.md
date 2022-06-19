@@ -1,3 +1,3 @@
 # Pets Town
 
-Mini Project
+Mini Project.
