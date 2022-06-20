@@ -74,6 +74,7 @@ function HomeDrawerAppBar(props) {
           >
             PETS TOWN
           </Typography>
+
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             <Button
               key={"Home"}
@@ -122,7 +123,6 @@ function HomeDrawerAppBar(props) {
           {drawer}
         </Drawer>
       </Box>
-      
     </Box>
   );
 }

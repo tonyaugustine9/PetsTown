@@ -7,18 +7,23 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
 import SignIn from "./components/SignIn";
 import SiteHome from "./components/SiteHome";
+import UserHome from "./components/User/UserHome";
+import UserProvider from "./store/UserProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <CssBaseline />
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route path="signin" element={<SignIn />} />
-          <Route index element={<SiteHome />} />
-        </Route>
-      </Routes>
+      <UserProvider>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route path="signin" element={<SignIn />} />
+            <Route index element={<SiteHome />} />
+          </Route>
+          <Route path="userhome" element={<UserHome />} />
+        </Routes>
+      </UserProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

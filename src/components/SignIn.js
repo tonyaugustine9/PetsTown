@@ -3,10 +3,17 @@ import useInput from "../hooks/use-input";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import React from "react";
-
+import { useNavigate } from "react-router-dom";
+import UserContext from "../store/user-context";
+import { useContext } from "react";
 const isNotEmpty = (value) => value.trim() !== "";
 const isEmail = (value) => value.includes("@");
+const isPassword = (value) => value.length >= 5;
+
 const Login = () => {
+  const ctx = useContext(UserContext);
+
+  const navigate = useNavigate();
   const {
     value: firstNameValue,
     isValid: firstNameIsValid,
@@ -32,9 +39,18 @@ const Login = () => {
     reset: resetEmail,
   } = useInput(isEmail);
 
+  const {
+    value: passwordValue,
+    isValid: passwordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    reset: resetPassword,
+  } = useInput(isPassword);
+
   let formIsValid = false;
 
-  if (firstNameIsValid && lastNameIsValid && emailIsValid) {
+  if (firstNameIsValid && lastNameIsValid && emailIsValid && passwordIsValid) {
     formIsValid = true;
   }
 
@@ -46,11 +62,19 @@ const Login = () => {
     }
 
     console.log("Submitted!");
-    console.log(firstNameValue, lastNameValue, emailValue);
+    console.log(firstNameValue, lastNameValue, emailValue, passwordValue);
 
     resetFirstName();
     resetLastName();
     resetEmail();
+    resetPassword();
+    ctx.signInUser({
+      firstName: firstNameValue,
+      lastName: lastNameValue,
+      password: passwordValue,
+      email: emailValue,
+    });
+    navigate("/userhome");
   };
 
   const firstNameClasses = firstNameHasError
@@ -60,6 +84,11 @@ const Login = () => {
     : {};
 
   const lastNameClasses = lastNameHasError
+    ? {
+        error: "null",
+      }
+    : {};
+  const passwordClasses = passwordHasError
     ? {
         error: "null",
       }
@@ -131,13 +160,19 @@ const Login = () => {
             </Box>
             <Box marginY={2}>
               <TextField
+                {...passwordClasses}
                 label="Password"
                 type="password"
                 id="password"
                 variant="outlined"
+                value={passwordValue}
+                onChange={passwordChangeHandler}
+                onBlur={passwordBlurHandler}
               />
-              {emailHasError && (
-                <p className="error-text">Please enter a valid password</p>
+              {passwordHasError && (
+                <p className="error-text">
+                  Password must be longer than five characters
+                </p>
               )}
             </Box>
 
