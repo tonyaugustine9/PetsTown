@@ -1,18 +1,18 @@
-import { Box, Container, Paper } from "@mui/material";
-import useInput from "../hooks/use-input";
-import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import UserContext from "../store/user-context";
-import { useContext } from "react";
-const isNotEmpty = (value) => value.trim() !== "";
-const isEmail = (value) => value.includes("@");
+import { Box, Container, Grid, Paper } from '@mui/material';
+import useInput from '../../hooks/use-input';
+import TextField from '@mui/material/TextField';
+import { Button } from '@mui/material';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import UserContext from '../../store/user-context';
+import { useContext } from 'react';
+import './SignIn.css';
+const isNotEmpty = (value) => value.trim() !== '';
+const isEmail = (value) => value.includes('@');
 const isPassword = (value) => value.length >= 5;
 
 const Login = () => {
   const ctx = useContext(UserContext);
-
   const navigate = useNavigate();
   const {
     value: firstNameValue,
@@ -56,14 +56,11 @@ const Login = () => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-
     if (!formIsValid) {
       return;
     }
-
-    console.log("Submitted!");
+    console.log('Submitted!');
     console.log(firstNameValue, lastNameValue, emailValue, passwordValue);
-
     resetFirstName();
     resetLastName();
     resetEmail();
@@ -74,46 +71,33 @@ const Login = () => {
       password: passwordValue,
       email: emailValue,
     });
-    navigate("/userhome");
+    navigate('/userhome');
   };
 
-  const firstNameClasses = firstNameHasError
-    ? {
-        error: "null",
-      }
-    : {};
-
-  const lastNameClasses = lastNameHasError
-    ? {
-        error: "null",
-      }
-    : {};
-  const passwordClasses = passwordHasError
-    ? {
-        error: "null",
-      }
-    : {};
-  const emailClasses = emailHasError
-    ? {
-        error: "null",
-      }
-    : {};
-
   return (
-    <Container>
-      <Paper>
-        <Box
-          elevation={7}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <form onSubmit={submitHandler}>
-            <Box marginTop={5}>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '80vh',
+      }}
+    >
+      <Paper
+        elevation={7}
+        sx={{
+          width: '750px',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '2rem 2rem',
+          borderRadius: '0.75rem',
+        }}
+      >
+        <form onSubmit={submitHandler}>
+          <Grid container spacing={2}>
+            <Grid item lg={6} sm={12} xs={12}>
               <TextField
-                {...firstNameClasses}
                 type="text"
                 id="firstname"
                 label="First Name"
@@ -121,14 +105,15 @@ const Login = () => {
                 onChange={firstNameChangeHandler}
                 onBlur={firstNameBlurHandler}
                 variant="outlined"
+                error={firstNameHasError}
+                fullWidth
               />
               {firstNameHasError && (
                 <p className="error-text">Please enter a first name.</p>
               )}
-            </Box>
-            <Box marginTop={2}>
+            </Grid>
+            <Grid item lg={6}>
               <TextField
-                {...lastNameClasses}
                 type="text"
                 id="lastname"
                 label="Last Name"
@@ -136,14 +121,15 @@ const Login = () => {
                 onChange={lastNameChangeHandler}
                 onBlur={lastNameBlurHandler}
                 variant="outlined"
+                error={lastNameHasError}
+                fullWidth
               />
               {lastNameHasError && (
                 <p className="error-text">Please enter a last name.</p>
               )}
-            </Box>
-            <Box marginY={2}>
+            </Grid>
+            <Grid item lg={12}>
               <TextField
-                {...emailClasses}
                 label="Email"
                 type="text"
                 id="email"
@@ -151,16 +137,17 @@ const Login = () => {
                 onChange={emailChangeHandler}
                 onBlur={emailBlurHandler}
                 variant="outlined"
+                error={emailHasError}
+                fullWidth
               />
               {emailHasError && (
                 <p className="error-text">
                   Please enter a valid email address.
                 </p>
               )}
-            </Box>
-            <Box marginY={2}>
+            </Grid>
+            <Grid item lg={12} sm={12} xs={12}>
               <TextField
-                {...passwordClasses}
                 label="Password"
                 type="password"
                 id="password"
@@ -168,23 +155,24 @@ const Login = () => {
                 value={passwordValue}
                 onChange={passwordChangeHandler}
                 onBlur={passwordBlurHandler}
+                error={passwordHasError}
+                fullWidth
               />
               {passwordHasError && (
                 <p className="error-text">
                   Password must be longer than five characters
                 </p>
               )}
-            </Box>
-
-            <Box marginY={2}>
+            </Grid>
+            <Grid item lg={12}>
               <Button type="submit" variant="contained" disabled={!formIsValid}>
                 Submit
               </Button>
-            </Box>
-          </form>
-        </Box>
+            </Grid>
+          </Grid>
+        </form>
       </Paper>
-    </Container>
+    </Box>
   );
 };
 
