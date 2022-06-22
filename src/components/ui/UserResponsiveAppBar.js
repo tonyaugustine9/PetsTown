@@ -46,7 +46,10 @@ const UserResponsiveAppBar = () => {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="fixed"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -157,8 +160,10 @@ const UserResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <Box key="namefield"  marginLeft={2}>
-                <Typography textAlign="left">Name: {ctx.firstName}</Typography>
+              <Box key="namefield" marginLeft={2}>
+                <Typography textAlign="left">
+                  Name: {localStorage.getItem("name")}
+                </Typography>
               </Box>
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>

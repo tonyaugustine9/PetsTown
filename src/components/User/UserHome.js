@@ -1,11 +1,23 @@
 import React from "react";
 import UserResponsiveAppBar from "../ui/UserResponsiveAppBar";
+import { Box, Container } from "@mui/material";
+// import BasicDrawer from "../ui/BasicDrawer";
+import { Outlet } from "react-router-dom";
+
 const UserHome = () => {
   return (
-    <React.Fragment>
+    <Box sx={{ display: "flex" }}>
       <UserResponsiveAppBar />
-      <div>Logged in</div>
-    </React.Fragment>
+      <Container
+        sx={{
+          marginTop: "70px",
+          width: "100vw",
+          height: "100vh",
+        }}
+      >
+        <Outlet />
+      </Container>
+    </Box>
   );
 };
 

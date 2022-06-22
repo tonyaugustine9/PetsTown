@@ -56,7 +56,7 @@ function HomeDrawerAppBar(props) {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <AppBar position="relative" component="nav">
+      <AppBar position="fixed" component="nav">
         <Toolbar>
           <IconButton
             color="inherit"

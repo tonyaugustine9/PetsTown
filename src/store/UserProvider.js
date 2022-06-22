@@ -1,10 +1,12 @@
-import UserContext from './user-context';
-import { useReducer } from 'react';
-import { defaultUserState } from './constants';
+import UserContext from "./user-context";
+import { useReducer } from "react";
+import { defaultUserState } from "./constants";
 
 const userReducer = (state, action) => {
-  if (action.type === 'LOGIN') {
-    console.log('in reducer', action.item.firstName, action.item.password);
+  if (action.type === "LOGIN") {
+    console.log("in reducer", action.item.firstName, action.item.password);
+    localStorage.setItem("isLoggedIn", "1");
+    localStorage.setItem("name", action.item.firstName);
     return {
       firstName: action.item.firstName,
       lastName: action.item.lastName,
@@ -12,8 +14,10 @@ const userReducer = (state, action) => {
       password: action.item.password,
     };
   }
-  if (action.type === 'LOGOUT') {
-    console.log(' logged out');
+  if (action.type === "LOGOUT") {
+    console.log(" logged out");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("name");
     return defaultUserState;
   }
   return defaultUserState;
@@ -25,10 +29,10 @@ const UserProvider = (props) => {
     defaultUserState
   );
   const signInUserHandler = (item) => {
-    dispatchUserAction({ type: 'LOGIN', item: item });
+    dispatchUserAction({ type: "LOGIN", item: item });
   };
   const signOutUserHandler = () => {
-    dispatchUserAction({ type: 'LOGOUT' });
+    dispatchUserAction({ type: "LOGOUT" });
   };
   const userContext = {
     firstName: userState.firstName,

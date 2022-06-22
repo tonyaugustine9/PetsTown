@@ -1,18 +1,18 @@
-import { Box, Container, Grid, Paper } from '@mui/material';
-import useInput from '../../hooks/use-input';
-import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import UserContext from '../../store/user-context';
-import { useContext } from 'react';
-import './SignIn.css';
-const isNotEmpty = (value) => value.trim() !== '';
-const isEmail = (value) => value.includes('@');
+import { Box, Grid, Paper } from "@mui/material";
+import useInput from "../../hooks/use-input";
+import TextField from "@mui/material/TextField";
+import { Button } from "@mui/material";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import UserContext from "../../store/user-context";
+import { useContext } from "react";
+const isNotEmpty = (value) => value.trim() !== "";
+const isEmail = (value) => value.includes("@");
 const isPassword = (value) => value.length >= 5;
 
 const Login = () => {
   const ctx = useContext(UserContext);
+
   const navigate = useNavigate();
   const {
     value: firstNameValue,
@@ -56,11 +56,14 @@ const Login = () => {
 
   const submitHandler = (event) => {
     event.preventDefault();
+
     if (!formIsValid) {
       return;
     }
-    console.log('Submitted!');
+
+    console.log("Submitted!");
     console.log(firstNameValue, lastNameValue, emailValue, passwordValue);
+
     resetFirstName();
     resetLastName();
     resetEmail();
@@ -71,27 +74,27 @@ const Login = () => {
       password: passwordValue,
       email: emailValue,
     });
-    navigate('/userhome');
+    navigate("/userhome");
   };
 
   return (
     <Box
       sx={{
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '80vh',
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "80vh",
       }}
     >
       <Paper
         elevation={7}
         sx={{
-          width: '750px',
-          display: 'flex',
-          flexDirection: 'column',
-          padding: '2rem 2rem',
-          borderRadius: '0.75rem',
+          width: "750px",
+          display: "flex",
+          flexDirection: "column",
+          padding: "2rem 2rem",
+          borderRadius: "0.75rem",
         }}
       >
         <form onSubmit={submitHandler}>
@@ -112,7 +115,7 @@ const Login = () => {
                 <p className="error-text">Please enter a first name.</p>
               )}
             </Grid>
-            <Grid item lg={6}>
+            <Grid item lg={6} sm={12} xs={12}>
               <TextField
                 type="text"
                 id="lastname"
@@ -128,7 +131,7 @@ const Login = () => {
                 <p className="error-text">Please enter a last name.</p>
               )}
             </Grid>
-            <Grid item lg={12}>
+            <Grid item lg={12} sm={6} xs={12}>
               <TextField
                 label="Email"
                 type="text"
@@ -146,7 +149,7 @@ const Login = () => {
                 </p>
               )}
             </Grid>
-            <Grid item lg={12} sm={12} xs={12}>
+            <Grid item lg={12} sm={6}>
               <TextField
                 label="Password"
                 type="password"
@@ -164,7 +167,7 @@ const Login = () => {
                 </p>
               )}
             </Grid>
-            <Grid item lg={12}>
+            <Grid item lg={12} sm={12} xs={12}>
               <Button type="submit" variant="contained" disabled={!formIsValid}>
                 Submit
               </Button>
