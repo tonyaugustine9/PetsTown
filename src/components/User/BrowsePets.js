@@ -1,17 +1,17 @@
-import BasicDrawer from "../ui/BasicDrawer";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import BasicDrawer from '../ui/BasicDrawer';
+import { Box, Grid, Paper, Typography } from '@mui/material';
 
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { database } from "../../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { database } from '../../firebaseConfig';
+import { collection, getDocs } from 'firebase/firestore';
 
 const BrowsePets = () => {
   const navigate = useNavigate();
   const [pets, setPets] = useState([]);
+  const collectionRef = collection(database, 'petlist');
 
-  useEffect(() => {
-    const collectionRef = collection(database, "petlist");
+  const fetchPets = async () => {
     getDocs(collectionRef).then((data) => {
       const loadedPets = [];
 
@@ -19,9 +19,14 @@ const BrowsePets = () => {
         loadedPets.push({ ...item.data(), id: item.id });
       });
 
-      console.log(JSON.stringify(loadedPets));
       setPets(loadedPets);
     });
+    const response = await getDocs(collectionRef);
+    console.log(response);
+  };
+
+  useEffect(() => {
+    fetchPets();
   }, []);
 
   const petList = pets.map((pet) => (
@@ -29,7 +34,7 @@ const BrowsePets = () => {
       <Paper
         key={pet.id}
         elevation={5}
-        sx={{ borderRadius: "25px", overflow: "hidden" }}
+        sx={{ borderRadius: '25px', overflow: 'hidden' }}
         onClick={() => navigate(`/userhome/buypets/${pet.id}`)}
       >
         <img src={pet.picture} alt="petdog" width="100%" height="200rem" />
@@ -38,9 +43,9 @@ const BrowsePets = () => {
             {pet.name}
           </Typography>
           <Box
-            display={"flex"}
-            flexWrap={"wrap"}
-            alignItems={"center"}
+            display={'flex'}
+            flexWrap={'wrap'}
+            alignItems={'center'}
             justifyContent="space-between"
           >
             <Typography>{pet.gender}</Typography>
@@ -53,7 +58,7 @@ const BrowsePets = () => {
     </Grid>
   ));
   return (
-    <Box sx={{ display: "flex", marginTop: "10px" }}>
+    <Box sx={{ display: 'flex', marginTop: '10px' }}>
       <BasicDrawer />
       <Grid container spacing={6}>
         {petList}
