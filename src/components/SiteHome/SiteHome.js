@@ -1,5 +1,4 @@
-import React from 'react';
-import './SiteHome.css';
+import React from "react";
 
 function SiteHome() {
   return <div className="home">SiteHome</div>;
