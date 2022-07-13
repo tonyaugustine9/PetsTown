@@ -1,12 +1,31 @@
 import BasicDrawer from "../ui/BasicDrawer";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { petData } from "./petdata";
+
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { database } from "../../firebaseConfig";
+import { collection, getDocs } from "firebase/firestore";
+
 const BrowsePets = () => {
   const navigate = useNavigate();
+  const [pets, setPets] = useState([]);
 
-  const petList = petData.map((pet) => (
-    <Grid item xs={8} md={4}>
+  useEffect(() => {
+    const collectionRef = collection(database, "petlist");
+    getDocs(collectionRef).then((data) => {
+      const loadedPets = [];
+
+      data.docs.forEach((item) => {
+        loadedPets.push({ ...item.data(), id: item.id });
+      });
+
+      console.log(JSON.stringify(loadedPets));
+      setPets(loadedPets);
+    });
+  }, []);
+
+  const petList = pets.map((pet) => (
+    <Grid item xs={8} md={4} key={pet.id}>
       <Paper
         key={pet.id}
         elevation={5}

@@ -6,6 +6,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../store/user-context";
 import { useContext } from "react";
+
 const isNotEmpty = (value) => value.trim() !== "";
 const isEmail = (value) => value.includes("@");
 const isPassword = (value) => value.length >= 5;
