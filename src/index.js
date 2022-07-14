@@ -9,10 +9,13 @@ import SiteHome from "./components/SiteHome/SiteHome";
 import UserHome from "./components/User/UserHome";
 import UserProvider from "./store/UserProvider";
 import ShopCategory from "./components/User/ShopCategory";
-import BuyProducts from "./components/User/BuyProducts";
+// import BuyProducts from "./components/User/BuyProducts";
 import BuyPets from "./components/User/BuyPets";
 import BrowsePets from "./components/User/BrowsePets";
 import ViewPet from "./components/User/ViewPet";
+import Products from "./components/products/Products";
+import ProductItemPage from "./components/products/ProductItem/ProductItemPage";
+import BrowseProducts from "./components/products/BrowseProducts";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -27,7 +30,10 @@ root.render(
           </Route>
           <Route path="userhome" element={<UserHome />}>
             <Route index element={<ShopCategory />} />
-            <Route path="buyproducts" element={<BuyProducts />} />
+            <Route path="buyproducts" element={<Products />}>
+              <Route index element={<BrowseProducts />} />
+              <Route path=":productId" element={<ProductItemPage />} />
+            </Route>
             <Route path="buypets" element={<BuyPets />}>
               <Route index element={<BrowsePets />} />
               <Route path=":petId" element={<ViewPet />} />

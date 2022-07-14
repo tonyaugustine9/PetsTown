@@ -9,9 +9,9 @@ import { collection, getDocs } from "firebase/firestore";
 const BrowsePets = () => {
   const navigate = useNavigate();
   const [pets, setPets] = useState([]);
+  const collectionRef = collection(database, "petlist");
 
-  useEffect(() => {
-    const collectionRef = collection(database, "petlist");
+  const fetchPets = async () => {
     getDocs(collectionRef).then((data) => {
       const loadedPets = [];
 
@@ -19,9 +19,14 @@ const BrowsePets = () => {
         loadedPets.push({ ...item.data(), id: item.id });
       });
 
-      console.log(JSON.stringify(loadedPets));
       setPets(loadedPets);
     });
+    const response = await getDocs(collectionRef);
+    console.log(response);
+  };
+
+  useEffect(() => {
+    fetchPets();
   }, []);
 
   const petList = pets.map((pet) => (

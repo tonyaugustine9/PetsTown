@@ -1,24 +1,27 @@
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { database } from "../../firebaseConfig";
+import { database } from "../../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-const ViewPet = () => {
+const ProductItemPage = () => {
   const params = useParams();
-  const petId = params.petId;
-  const [petData, setPetData] = useState(undefined);
+  const productId = params.productId;
+  const [productData, setProductData] = useState(undefined);
 
   useEffect(() => {
-    const collectionRef = collection(database, "petlist");
+    const collectionRef = collection(database, "productlist");
     getDocs(collectionRef).then((response) => {
-      setPetData({ ...response.docs[petId - 1].data(), id: response.id });
+      setProductData({
+        ...response.docs[productId - 1].data(),
+        id: response.id,
+      });
     });
-  }, [petId]);
-  console.log(petData, "PET DATA");
+  }, [productId]);
+  console.log(productData, "PRODUCT DATA");
   return (
     <Grid container spacing={6}>
-      {petData && (
+      {productData && (
         <>
           <Grid item xs={12} md={4}>
             <Box
@@ -33,7 +36,7 @@ const ViewPet = () => {
                 elevation={5}
                 sx={{ borderRadius: "25px", overflow: "hidden" }}
               >
-                <img src={petData.picture} alt="petdog" />
+                <img width="100%" src={productData.picture} alt="petdog" />
               </Paper>
             </Box>
           </Grid>
@@ -41,7 +44,7 @@ const ViewPet = () => {
           <Grid item xs={12} md={6}>
             <Box sx={{ paddingX: 1, paddingBottom: 1 }}>
               <Typography variant="h2" component="h3">
-                {petData.name}
+                {productData.name}
               </Typography>
               <Box
                 display={"flex"}
@@ -49,17 +52,10 @@ const ViewPet = () => {
                 flexWrap={"wrap"}
                 justifyContent="space-between"
               >
-                <Typography>{petData.gender}</Typography>
-                <Typography>{petData.breed}</Typography>
+                <Typography>{productData.brand}</Typography>
+                <Typography>{productData.price}</Typography>
               </Box>
-              <Typography>{petData.location}</Typography>
-            </Box>
-            <Box>
-              <Typography variant="h2" component="h3">
-                CONTACT DETAILS
-              </Typography>
-              <Typography>{petData.contactdetails.name}</Typography>
-              <Typography>{petData.contactdetails.phone}</Typography>
+              <Typography>{productData.description}</Typography>
             </Box>
           </Grid>
         </>
@@ -68,4 +64,4 @@ const ViewPet = () => {
   );
 };
 
-export default ViewPet;
+export default ProductItemPage;

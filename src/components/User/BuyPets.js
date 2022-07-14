@@ -4,11 +4,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 
 const BuyPets = () => {
-  return (
-    <React.Fragment>
-      <Outlet />
-    </React.Fragment>
-  );
+  return <Outlet />;
 };
 
 export default BuyPets;

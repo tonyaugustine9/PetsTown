@@ -11,8 +11,8 @@ const UserHome = () => {
       <Container
         sx={{
           marginTop: "70px",
-          width: "100vw",
-          height: "100vh",
+          width: "100%",
+          height: "80vh",
         }}
       >
         <Outlet />
