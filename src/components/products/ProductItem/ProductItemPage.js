@@ -52,9 +52,12 @@ const ProductItemPage = () => {
                 flexWrap={"wrap"}
                 justifyContent="space-between"
               >
-                <Typography>{productData.brand}</Typography>
-                <Typography>{productData.price}</Typography>
+                <Typography>BRAND: {productData.brand}</Typography>
+                <Typography>PRICE: RS {productData.price}</Typography>
               </Box>
+              <Typography variant="h5" component="h3" marginTop={3}>
+                PRODUCT DESCRIPTION
+              </Typography>
               <Typography>{productData.description}</Typography>
             </Box>
           </Grid>
