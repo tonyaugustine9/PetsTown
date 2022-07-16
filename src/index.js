@@ -16,6 +16,7 @@ import ViewPet from "./components/User/ViewPet";
 import Products from "./components/products/Products";
 import ProductItemPage from "./components/products/ProductItem/ProductItemPage";
 import BrowseProducts from "./components/products/BrowseProducts";
+import SignUp from "./components/Account Authentication/SignUp/SignUp";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -27,6 +28,7 @@ root.render(
           <Route path="/" element={<App />}>
             <Route path="signin" element={<SignIn />} />
             <Route index element={<SiteHome />} />
+            <Route path="signup" element={<SignUp />} />
           </Route>
           <Route path="userhome" element={<UserHome />}>
             <Route index element={<ShopCategory />} />
