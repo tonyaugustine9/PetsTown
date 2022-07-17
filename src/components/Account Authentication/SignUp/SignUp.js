@@ -12,6 +12,10 @@ import AuthCredentials from "./AuthCredentials";
 import UserInfo from "./UserInfo";
 import AddressInfo from "./AddressInfo";
 import AccountCreated from "./AccountCreated";
+import { doc, setDoc } from "firebase/firestore";
+
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, database } from "../../../firebaseConfig";
 
 const steps = [
   "Authentication Credentials",
@@ -22,14 +26,71 @@ const steps = [
 
 const SignUp = () => {
   const [activeStep, setActiveStep] = React.useState(0);
+  const [formValid, setFormValid] = React.useState(false);
+  const [nextClicked, setNextClicked] = React.useState(false);
+  const [userData, setUserData] = React.useState({});
 
   const handleNext = () => {
+    if (activeStep === 2) {
+      console.log(userData);
+      console.log(" data ");
+      // ctx.addData(userData);
+      console.log("sending data to firebase");
+      createUserWithEmailAndPassword(
+        auth,
+        userData.emailValue,
+        userData.passwordValue
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          const uid = user.uid;
+          console.log(userCredential.user);
+          updateProfile(user, {
+            displayName: `${userData.firstNameValue} ${userData.lastNameValue}`,
+          })
+            .then(() => {
+              setDoc(doc(database, "userdata", uid), {
+                phoneno: userData.phoneNoValue,
+              })
+                .then(() => {
+                  console.log("doc added");
+                })
+                .catch(() => {
+                  console.log("error adding doc");
+                });
+            })
+            .catch((error) => {
+              // An error occurred
+              // ...
+            });
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          // ..
+          console.log("error");
+        });
+    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setFormValid(false);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setFormValid(false);
   };
+
+  console.log(formValid);
+
+  const formValidCheckHandler = React.useCallback((item) => {
+    setFormValid(item);
+  }, []);
+
+  const dataChangeHandler = React.useCallback((data) => {
+    setUserData((prevUserData) => ({ ...prevUserData, ...data }));
+  }, []);
 
   return (
     <Container
@@ -55,7 +116,7 @@ const SignUp = () => {
           }}
         >
           <Box sx={{ margin: "auto" }}>
-            <PetsTownLogo next />
+            <PetsTownLogo />
           </Box>
 
           <Stepper activeStep={activeStep} alternativeLabel>
@@ -67,10 +128,27 @@ const SignUp = () => {
               );
             })}
           </Stepper>
-          {activeStep === 0 && <AuthCredentials />}
-          {activeStep === 1 && <UserInfo />}
-          {activeStep === 2 && <AddressInfo />}
-          {activeStep === 3 && <AccountCreated />}
+          {activeStep === 0 && (
+            <AuthCredentials
+              onFormValidCheck={formValidCheckHandler}
+              onDataChange={dataChangeHandler}
+            />
+          )}
+          {activeStep === 1 && (
+            <UserInfo
+              onFormValidCheck={formValidCheckHandler}
+              onDataChange={dataChangeHandler}
+            />
+          )}
+          {activeStep === 2 && (
+            <AddressInfo
+              onFormValidCheck={formValidCheckHandler}
+              onDataChange={dataChangeHandler}
+            />
+          )}
+          {activeStep === 3 && (
+            <AccountCreated onFormValidCheck={formValidCheckHandler} />
+          )}
 
           {activeStep === steps.length ? (
             <React.Fragment>
@@ -93,7 +171,7 @@ const SignUp = () => {
                 )}
                 <Box sx={{ flex: "1 1 auto" }} />
 
-                <Button onClick={handleNext}>
+                <Button onClick={handleNext} disabled={!formValid}>
                   {activeStep === steps.length - 1
                     ? "Continue to Login"
                     : "Next"}

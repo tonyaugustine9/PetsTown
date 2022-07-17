@@ -7,7 +7,7 @@ import { CssBaseline } from "@mui/material";
 import SignIn from "./components/SignIn/SignIn";
 import SiteHome from "./components/SiteHome/SiteHome";
 import UserHome from "./components/User/UserHome";
-import UserProvider from "./store/UserProvider";
+import UserProvider from "./store/UserContext/UserProvider";
 import ShopCategory from "./components/User/ShopCategory";
 // import BuyProducts from "./components/User/BuyProducts";
 import BuyPets from "./components/User/BuyPets";
@@ -16,7 +16,8 @@ import ViewPet from "./components/User/ViewPet";
 import Products from "./components/products/Products";
 import ProductItemPage from "./components/products/ProductItem/ProductItemPage";
 import BrowseProducts from "./components/products/BrowseProducts";
-import SignUp from "./components/Account Authentication/SignUp/SignUp";
+// import SignUp from "./components/Account Authentication/SignUp/SignUp";
+import SignUpWrapper from "./components/Account Authentication/SignUp/SignUpWraper";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -28,7 +29,8 @@ root.render(
           <Route path="/" element={<App />}>
             <Route path="signin" element={<SignIn />} />
             <Route index element={<SiteHome />} />
-            <Route path="signup" element={<SignUp />} />
+
+            <Route path="signup" element={<SignUpWrapper />} />
           </Route>
           <Route path="userhome" element={<UserHome />}>
             <Route index element={<ShopCategory />} />

@@ -1,12 +1,13 @@
 import { Box, Grid, Paper, TextField } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import useInput from "../../../hooks/use-input";
+import SignUpContext from "./store/signUp-context";
 
 const isEmail = (value) => value.includes("@");
-const isPassword = (value) => value.length >= 5;
-const isConfirmPassword = (value) => value.length >= 5;
+const isPassword = (value) => value.length >= 6;
 
-const AuthCredentials = () => {
+const AuthCredentials = (props) => {
+  const ctx = useContext(SignUpContext);
   const {
     value: emailValue,
     isValid: emailIsValid,
@@ -25,32 +26,28 @@ const AuthCredentials = () => {
     reset: resetPassword,
   } = useInput(isPassword);
 
-  // const {
-  //   value: confirmPasswordValue,
-  //   isValid: confirmPasswordIsValid,
-  //   hasError: confirmPasswordHasError,
-  //   valueChangeHandler: confirmPasswordChangeHandler,
-  //   inputBlurHandler: confirmPasswordBlurHandler,
-  //   reset: resetconfirmPassword,
-  // } = useInput(isConfirmPassword);
+  const {
+    value: confirmPasswordValue,
+    isValid: confirmPasswordIsValid,
+    hasError: confirmPasswordHasError,
+    valueChangeHandler: confirmPasswordChangeHandler,
+    inputBlurHandler: confirmPasswordBlurHandler,
+    reset: resetconfirmPassword,
+  } = useInput((value) => value === passwordValue);
 
-  let formIsValid = false;
-  const [confirmPasswordValue, setConfirmPasswordValue] = React.useState("");
-  const [confirmPasswordHasError, setConfirmPasswordHasError] =
-    React.useState(false);
-  const [confirmPasswordBlur, setConfirmPasswordBlur] = React.useState(false);
-  const [confirmPasswordIsValid, setConfirmPasswordIsValid] =
-    React.useState(true);
+  const authData = useMemo(
+    () => ({ passwordValue, emailValue }),
+    [passwordValue, emailValue]
+  );
+  useEffect(() => {
+    props.onFormValidCheck(
+      emailIsValid && passwordIsValid && confirmPasswordIsValid
+    );
+  }, [emailIsValid, passwordIsValid, confirmPasswordIsValid]);
 
-  const confirmPasswordChangeHandler = (event) => {
-    setConfirmPasswordValue(event.target.value);
-
-    setConfirmPasswordIsValid(event.target.value === passwordValue);
-  };
-
-  if (emailIsValid && passwordIsValid && confirmPasswordIsValid) {
-    formIsValid = true;
-  }
+  useEffect(() => {
+    props.onDataChange(authData);
+  }, [authData]);
 
   //   const submitHandler = (event) => {
   //     event.preventDefault();
@@ -123,11 +120,12 @@ const AuthCredentials = () => {
               variant="outlined"
               value={confirmPasswordValue}
               onChange={confirmPasswordChangeHandler}
-              error={!confirmPasswordIsValid}
+              onBlur={confirmPasswordBlurHandler}
+              error={confirmPasswordHasError}
               fullWidth
               size="small"
             />
-            {!confirmPasswordIsValid && (
+            {confirmPasswordHasError && (
               <p className="error-text">Passwords dont match. Try again</p>
             )}
           </Grid>

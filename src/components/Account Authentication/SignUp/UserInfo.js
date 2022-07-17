@@ -9,12 +9,12 @@ import {
   TextField,
 } from "@mui/material";
 import useInput from "../../../hooks/use-input";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 
 const isNotEmpty = (value) => value.trim() !== "";
 const isPhoneNo = (value) => value.length === 10;
 
-const UserInfo = () => {
+const UserInfo = (props) => {
   const {
     value: firstNameValue,
     isValid: firstNameIsValid,
@@ -53,12 +53,30 @@ const UserInfo = () => {
     reset: resetPhoneNo,
   } = useInput(isPhoneNo);
 
+  const userInfoData = useMemo(
+    () => ({
+      firstNameValue,
+      lastNameValue,
+      phoneNoValue,
+      genderValue,
+      dobValue,
+    }),
+    [firstNameValue, lastNameValue, phoneNoValue, genderValue, dobValue]
+  );
+
   let formIsValid = false;
+  useEffect(() => {
+    props.onFormValidCheck(
+      firstNameIsValid &&
+        lastNameIsValid &&
+        phoneNoIsValid &&
+        genderValue !== ""
+    );
+  }, [firstNameIsValid, lastNameIsValid, phoneNoIsValid, genderValue]);
 
-  if (firstNameIsValid && lastNameIsValid && phoneNoIsValid) {
-    formIsValid = true;
-  }
-
+  useEffect(() => {
+    props.onDataChange(userInfoData);
+  }, [userInfoData]);
   //   const submitHandler = (event) => {
   //     event.preventDefault();
 

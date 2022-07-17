@@ -9,7 +9,7 @@ import {
   TextField,
 } from "@mui/material";
 import useInput from "../../../hooks/use-input";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import cities from "./constants/cities";
 import countries from "./constants/countries";
@@ -19,7 +19,7 @@ const isNotEmpty = (value) => value.trim() !== "";
 const isPin = (value) => value.length === 6;
 const isLandMark = (value) => true;
 
-const AddressInfo = () => {
+const AddressInfo = (props) => {
   const {
     value: landMarkValue,
     isValid: landMarkIsValid,
@@ -34,21 +34,14 @@ const AddressInfo = () => {
   const [cityValue, setCityValue] = React.useState(null);
   const [stateValue, setStateValue] = React.useState(states[12]);
 
-  
-
-  
-
   const cityChangeHandler = (event, value) => {
-    console.log(value);
     setCityValue(value);
   };
 
   const countryChangeHandler = (event, value) => {
-    console.log(value);
     setCountryValue(value);
   };
   const stateChangeHandler = (event, value) => {
-    console.log(value);
     setStateValue(value);
   };
 
@@ -61,12 +54,18 @@ const AddressInfo = () => {
     reset: resetPIN,
   } = useInput(isPin);
 
-  let formIsValid = false;
-  countries.forEach((value, index) => {
-    if (value.label === "India") {
-      console.log(index);
-    }
-  });
+  const addressData = useMemo(
+    () => ({ pinValue, cityValue, stateValue, countryValue, landMarkValue }),
+    [pinValue, cityValue, stateValue, countryValue, landMarkValue]
+  );
+
+  useEffect(() => {
+    props.onFormValidCheck(pinIsValid && landMarkIsValid && cityValue !== null);
+  }, [pinIsValid, landMarkIsValid, cityValue]);
+
+  useEffect(() => {
+    props.onDataChange(addressData);
+  }, [addressData]);
 
   //   if (firstNameIsValid && lastNameIsValid && phoneNoIsValid) {
   //     formIsValid = true;

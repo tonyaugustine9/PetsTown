@@ -1,6 +1,6 @@
 import UserContext from "./user-context";
 import { useReducer } from "react";
-import { defaultUserState } from "./constants";
+import { defaultUserState } from "../constants";
 
 const userReducer = (state, action) => {
   if (action.type === "LOGIN") {
