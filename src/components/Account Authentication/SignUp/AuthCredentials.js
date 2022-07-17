@@ -108,7 +108,7 @@ const AuthCredentials = (props) => {
             />
             {passwordHasError && (
               <p className="error-text">
-                Password must be longer than five characters
+                Password must be longer than six characters
               </p>
             )}
           </Grid>
