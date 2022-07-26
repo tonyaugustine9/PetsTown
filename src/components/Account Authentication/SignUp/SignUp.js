@@ -5,7 +5,15 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Container, Grid, Paper, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import LinearProgress from "@mui/material/LinearProgress";
+import {
+  Container,
+  formGroupClasses,
+  Grid,
+  Paper,
+  TextField,
+} from "@mui/material";
 import { ReactComponent as PetsTownLogo } from "../../../assets/petstownlogo/petstownlogo100.svg";
 import { minWidth } from "@mui/system";
 import AuthCredentials from "./AuthCredentials";
@@ -29,50 +37,93 @@ const SignUp = () => {
   const [formValid, setFormValid] = React.useState(false);
   const [nextClicked, setNextClicked] = React.useState(false);
   const [userData, setUserData] = React.useState({});
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
+
+  const navigate = useNavigate();
+  const handleFinished = () => {
+    navigate("/signin");
+  };
+
+  const submissionHandler = () => {
+    setIsError(false);
+    setIsLoading(true);
+    console.log(userData);
+    console.log(" data ");
+    // ctx.addData(userData);
+    console.log("sending data to firebase");
+
+    // const timer = setTimeout(() => {
+    //   console.log("in timeout");
+    //   // setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    // setFormValid(true);
+    // setIsLoading(false);
+    //   // setIsError(false);
+    // }, 5000);
+    // console.log("out timeout");
+    // clearTimeout(timer);
+    createUserWithEmailAndPassword(
+      auth,
+      userData.emailValue,
+      userData.passwordValue
+    )
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        const uid = user.uid;
+        console.log(userCredential.user);
+        updateProfile(user, {
+          displayName: `${userData.firstNameValue} ${userData.lastNameValue}`,
+        })
+          .then(() => {
+            setDoc(doc(database, "userdata", uid), {
+              data: "data",
+            });
+            setDoc(doc(database, "userdata", uid, "personalinfo", "data"), {
+              phoneno: userData.phoneNoValue,
+              city: userData.cityValue,
+              state: userData.stateValue,
+              pin: userData.pinValue,
+              landmark: userData.landMarkValue,
+              gender: userData.genderValue,
+              dob: userData.dobValue,
+              country: userData.countryValue,
+              lastname: userData.lastNameValue,
+              firstname: userData.firstNameValue,
+              email: userData.emailValue,
+            })
+              .then(() => {
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+                setFormValid(true);
+                setIsLoading(false);
+                setIsError(false);
+                console.log("doc added");
+              })
+              .catch(() => {
+                setIsLoading(false);
+                setIsError(true);
+                console.log("error adding doc");
+              });
+          })
+          .catch((error) => {
+            setIsLoading(false);
+            setIsError(true);
+            // An error occurred
+            // ...
+          });
+        // ...
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        setIsError(true);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+        console.log("error");
+      });
+  };
 
   const handleNext = () => {
-    if (activeStep === 2) {
-      console.log(userData);
-      console.log(" data ");
-      // ctx.addData(userData);
-      console.log("sending data to firebase");
-      createUserWithEmailAndPassword(
-        auth,
-        userData.emailValue,
-        userData.passwordValue
-      )
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          const uid = user.uid;
-          console.log(userCredential.user);
-          updateProfile(user, {
-            displayName: `${userData.firstNameValue} ${userData.lastNameValue}`,
-          })
-            .then(() => {
-              setDoc(doc(database, "userdata", uid), {
-                phoneno: userData.phoneNoValue,
-              })
-                .then(() => {
-                  console.log("doc added");
-                })
-                .catch(() => {
-                  console.log("error adding doc");
-                });
-            })
-            .catch((error) => {
-              // An error occurred
-              // ...
-            });
-          // ...
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          // ..
-          console.log("error");
-        });
-    }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setFormValid(false);
   };
@@ -81,8 +132,6 @@ const SignUp = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
     setFormValid(false);
   };
-
-  console.log(formValid);
 
   const formValidCheckHandler = React.useCallback((item) => {
     setFormValid(item);
@@ -103,6 +152,11 @@ const SignUp = () => {
       }}
     >
       <Box sx={{ minWidth: "400px" }}>
+        {isLoading && (
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        )}
         <Paper
           elevation={7}
           sx={{
@@ -162,7 +216,7 @@ const SignUp = () => {
                 {!(activeStep === steps.length - 1) && (
                   <Button
                     color="inherit"
-                    disabled={activeStep === 0}
+                    disabled={activeStep === 0 || isLoading}
                     onClick={handleBack}
                     sx={{ mr: 1 }}
                   >
@@ -171,11 +225,22 @@ const SignUp = () => {
                 )}
                 <Box sx={{ flex: "1 1 auto" }} />
 
-                <Button onClick={handleNext} disabled={!formValid}>
-                  {activeStep === steps.length - 1
-                    ? "Continue to Login"
-                    : "Next"}
-                </Button>
+                {activeStep <= 1 && (
+                  <Button onClick={handleNext} disabled={!formValid}>
+                    Next
+                  </Button>
+                )}
+                {activeStep === 3 && (
+                  <Button onClick={handleFinished}>Continue to Login</Button>
+                )}
+                {activeStep === 2 && (
+                  <Button
+                    onClick={submissionHandler}
+                    disabled={!formValid || isLoading}
+                  >
+                    Next
+                  </Button>
+                )}
               </Box>
             </React.Fragment>
           )}

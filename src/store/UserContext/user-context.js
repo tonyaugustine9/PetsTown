@@ -8,11 +8,13 @@ const UserContext = React.createContext({
   state: "",
   country: "",
   pin: "",
-  phoneno: "",
+  phoneNo: "",
   gender: "",
   dob: "",
-  landmark: "",
+  landMark: "",
   signInUser: (item) => {},
   signOutUser: () => {},
+  signedIn: false,
+  isLoading: false
 });
 export default UserContext;

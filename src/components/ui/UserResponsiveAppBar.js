@@ -14,6 +14,9 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../store/UserContext/user-context";
+import { getAuth, signOut } from "firebase/auth";
+import { auth } from "../../firebaseConfig";
+
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard"];
@@ -41,8 +44,9 @@ const UserResponsiveAppBar = () => {
   const handleUserMenuSignOut = () => {
     ctx.signOutUser();
 
-    setAnchorElUser(null);
-    navigate("/");
+    // setAnchorElUser(null);
+    // navigate("/");
+    
   };
 
   return (

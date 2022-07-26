@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { database } from "../../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
 
 const ProductItemPage = () => {
   const params = useParams();
@@ -10,13 +11,19 @@ const ProductItemPage = () => {
   const [productData, setProductData] = useState(undefined);
 
   useEffect(() => {
-    const collectionRef = collection(database, "productlist");
-    getDocs(collectionRef).then((response) => {
-      setProductData({
-        ...response.docs[productId - 1].data(),
-        id: response.id,
-      });
-    });
+    const getData = async () => {
+      const docRef = doc(database, "productlist", productId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+
+        setProductData({ ...docSnap.data() });
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    };
+    getData();
   }, [productId]);
   console.log(productData, "PRODUCT DATA");
   return (

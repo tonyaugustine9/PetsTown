@@ -140,7 +140,7 @@ const UserInfo = (props) => {
           </Grid>
           <Grid item lg={4} sm={4} xs={6}>
             <TextField
-              type="ntext"
+              type="text"
               id="phoneno"
               label="Phone Number"
               value={phoneNoValue}

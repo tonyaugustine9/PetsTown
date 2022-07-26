@@ -1,4 +1,4 @@
-import { Box, Grid, Paper } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import useInput from "../../hooks/use-input";
 import TextField from "@mui/material/TextField";
 import { Button, Container } from "@mui/material";
@@ -8,9 +8,10 @@ import { ReactComponent as PetsTownLogo } from "../../assets/petstownlogo/petsto
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, database } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import LinearProgress from "@mui/material/LinearProgress";
 
-// import UserContext from "../../store/UserContext/user-context";
-// import { useContext } from "react";
+import UserContext from "../../store/UserContext/user-context";
+ import { useContext } from "react";
 // import HorizontalLinearStepper from "../../HorizontalLinearStepper";
 
 const isNotEmpty = (value) => value.trim() !== "";
@@ -18,9 +19,11 @@ const isEmail = (value) => value.includes("@");
 const isPassword = (value) => value.length >= 5;
 
 const Login = () => {
-  // const ctx = useContext(UserContext);
+   const ctx = useContext(UserContext);
 
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
 
   const {
     value: emailValue,
@@ -52,9 +55,8 @@ const Login = () => {
     if (!formIsValid) {
       return;
     }
-
-    console.log("Submitted!");
-    console.log(emailValue, passwordValue);
+    setIsLoading(true);
+    setIsError(false);
 
     signInWithEmailAndPassword(auth, emailValue, passwordValue)
       .then((userCredential) => {
@@ -64,19 +66,32 @@ const Login = () => {
         // ...
 
         const fetchUserDoc = async () => {
-          const docRef = doc(database, "userdata", user.uid);
+          const docRef = doc(
+            database,
+            "userdata",
+            user.uid,
+            "personalinfo",
+            "data"
+          );
 
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            console.log("Document data:", docSnap.data());
+            setIsLoading(false);
+            setIsError(false);
+            ctx.signInUser(docSnap.data())
+            // console.log(JSON.stringify(docSnap.data()));
           } else {
             // doc.data() will be undefined in this case
+            setIsLoading(false);
+            setIsError(true);
             console.log("No such document!");
           }
         };
         fetchUserDoc();
       })
       .catch((error) => {
+        setIsLoading(false);
+        setIsError(true);
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
@@ -105,6 +120,11 @@ const Login = () => {
       }}
     >
       <Box sx={{ minWidth: "400px" }}>
+        {isLoading && (
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        )}
         <Paper
           elevation={7}
           sx={{
@@ -131,7 +151,7 @@ const Login = () => {
                   onChange={emailChangeHandler}
                   onBlur={emailBlurHandler}
                   variant="outlined"
-                  error={emailHasError}
+                  error={emailHasError || isError}
                   fullWidth
                 />
                 {emailHasError && (
@@ -149,7 +169,7 @@ const Login = () => {
                   value={passwordValue}
                   onChange={passwordChangeHandler}
                   onBlur={passwordBlurHandler}
-                  error={passwordHasError}
+                  error={passwordHasError || isError}
                   fullWidth
                 />
                 {passwordHasError && (
@@ -157,21 +177,35 @@ const Login = () => {
                 )}
               </Grid>
               <Grid item lg={12} sm={12} xs={12}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  // disabled={!formIsValid}
+                {isError && (
+                  <Box>
+                    <Typography>Invalid Credentials</Typography>
+                  </Box>
+                )}
+              </Grid>
+              <Grid item lg={12} sm={12} xs={12}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row-reverse",
+                    width: "100%",
+                  }}
                 >
-                  SIGN IN
-                </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isLoading}
+                    // disabled={!formIsValid}
+                  >
+                    SIGN IN
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </form>
         </Paper>
       </Box>
     </Container>
-
-   
   );
 };
 

@@ -17,6 +17,7 @@ const BrowsePets = () => {
 
       data.docs.forEach((item) => {
         loadedPets.push({ ...item.data(), id: item.id });
+        console.log(item.id);
       });
 
       setPets(loadedPets);
