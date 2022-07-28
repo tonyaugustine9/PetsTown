@@ -2,7 +2,6 @@ import React from "react";
 const UserContext = React.createContext({
   firstName: "",
   lastName: "",
-  password: "",
   email: "",
   city: "",
   state: "",
@@ -12,9 +11,12 @@ const UserContext = React.createContext({
   gender: "",
   dob: "",
   landMark: "",
+  uid:"",
   signInUser: (item) => {},
   signOutUser: () => {},
+  setLoading: (item) => {},
   signedIn: false,
-  isLoading: false
+  isLoading: false,
+  isError: false,
 });
 export default UserContext;

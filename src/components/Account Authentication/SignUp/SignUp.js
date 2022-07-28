@@ -91,6 +91,7 @@ const SignUp = () => {
               lastname: userData.lastNameValue,
               firstname: userData.firstNameValue,
               email: userData.emailValue,
+              uid:uid
             })
               .then(() => {
                 setActiveStep((prevActiveStep) => prevActiveStep + 1);

@@ -13,8 +13,10 @@ function App() {
   const ctx = useContext(UserContext);
   return (
     <React.Fragment>
-      {ctx.signedIn ? <UserResponsiveAppBar /> : <HomeDrawerAppBar />}
-      <Box marginTop={10}>
+      {/* {ctx.signedIn ? <UserResponsiveAppBar /> : <HomeDrawerAppBar />} */}
+      <UserResponsiveAppBar />
+
+      <Box width="100%" marginTop="64px" /*marginLeft={1}*/>
         <Outlet />
       </Box>
     </React.Fragment>

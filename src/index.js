@@ -18,6 +18,7 @@ import ProductItemPage from "./components/products/ProductItem/ProductItemPage";
 import BrowseProducts from "./components/products/BrowseProducts";
 // import SignUp from "./components/Account Authentication/SignUp/SignUp";
 import SignUpWrapper from "./components/Account Authentication/SignUp/SignUpWraper";
+import BrowsePetsWrapper from "./components/Pets/BrowsePets/BrowsePetsWrapper";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -27,21 +28,21 @@ root.render(
       <UserProvider>
         <Routes>
           <Route path="/" element={<App />}>
+            <Route path="userhome" element={<UserHome />}>
+              <Route index element={<ShopCategory />} />
+              <Route path="buyproducts" element={<Products />}>
+                <Route index element={<BrowseProducts />} />
+                <Route path=":productId" element={<ProductItemPage />} />
+              </Route>
+              <Route path="buypets" element={<BuyPets />}>
+                <Route index element={<BrowsePets />} />
+                <Route path=":petId" element={<ViewPet />} />
+              </Route>
+            </Route>
             <Route path="signin" element={<SignIn />} />
             <Route index element={<SiteHome />} />
 
             <Route path="signup" element={<SignUpWrapper />} />
-          </Route>
-          <Route path="userhome" element={<UserHome />}>
-            <Route index element={<ShopCategory />} />
-            <Route path="buyproducts" element={<Products />}>
-              <Route index element={<BrowseProducts />} />
-              <Route path=":productId" element={<ProductItemPage />} />
-            </Route>
-            <Route path="buypets" element={<BuyPets />}>
-              <Route index element={<BrowsePets />} />
-              <Route path=":petId" element={<ViewPet />} />
-            </Route>
           </Route>
         </Routes>
       </UserProvider>

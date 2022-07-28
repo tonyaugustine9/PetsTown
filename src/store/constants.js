@@ -1,7 +1,6 @@
 export const defaultUserState = {
   firstName: "",
   lastName: "",
-  password: "",
   email: "",
   city: "",
   state: "",
@@ -11,4 +10,8 @@ export const defaultUserState = {
   gender: "",
   dob: "",
   landMark: "",
+  uid:"",
+  isLoading: false,
+  isError: false,
+  signedIn:false
 };

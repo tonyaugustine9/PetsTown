@@ -9,9 +9,10 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, database } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import LinearProgress from "@mui/material/LinearProgress";
-
+import Link from "@mui/material/Link";
+import { Link as RouterLink, MemoryRouter } from "react-router-dom";
 import UserContext from "../../store/UserContext/user-context";
- import { useContext } from "react";
+import { useContext } from "react";
 // import HorizontalLinearStepper from "../../HorizontalLinearStepper";
 
 const isNotEmpty = (value) => value.trim() !== "";
@@ -19,10 +20,10 @@ const isEmail = (value) => value.includes("@");
 const isPassword = (value) => value.length >= 5;
 
 const Login = () => {
-   const ctx = useContext(UserContext);
+  const ctx = useContext(UserContext);
 
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = React.useState(false);
+  // const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
 
   const {
@@ -55,7 +56,8 @@ const Login = () => {
     if (!formIsValid) {
       return;
     }
-    setIsLoading(true);
+    // setIsLoading(true);
+    ctx.setLoading(true);
     setIsError(false);
 
     signInWithEmailAndPassword(auth, emailValue, passwordValue)
@@ -76,13 +78,18 @@ const Login = () => {
 
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            setIsLoading(false);
+            // setIsLoading(false);
             setIsError(false);
-            ctx.signInUser(docSnap.data())
+
+            resetEmail();
+            resetPassword();
+            ctx.signInUser(docSnap.data());
+            ctx.setLoading(false);
             // console.log(JSON.stringify(docSnap.data()));
           } else {
             // doc.data() will be undefined in this case
-            setIsLoading(false);
+            // setIsLoading(false);
+            ctx.setLoading(false);
             setIsError(true);
             console.log("No such document!");
           }
@@ -90,23 +97,14 @@ const Login = () => {
         fetchUserDoc();
       })
       .catch((error) => {
-        setIsLoading(false);
+        // setIsLoading(false);
+        ctx.setLoading(false);
         setIsError(true);
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
         console.log("error");
       });
-
-    // resetEmail();
-    // resetPassword();
-    // ctx.signInUser({
-    //   firstName: firstNameValue,
-    //   lastName: lastNameValue,
-    //   password: passwordValue,
-    //   email: emailValue,
-    // });
-    // navigate("/userhome");
   };
 
   return (
@@ -119,8 +117,8 @@ const Login = () => {
         spacing: "5px",
       }}
     >
-      <Box sx={{ minWidth: "400px" }}>
-        {isLoading && (
+      <Box sx={{ minWidth: "400px", maxWidth: "750px" }}>
+        {ctx.isLoading && (
           <Box sx={{ width: "100%" }}>
             <LinearProgress />
           </Box>
@@ -140,69 +138,85 @@ const Login = () => {
           <Box sx={{ margin: "auto" }}>
             <PetsTownLogo />
           </Box>
-          <form onSubmit={submitHandler}>
+
+          {!ctx.signedIn ? (
+            <form onSubmit={submitHandler}>
+              <Grid container spacing={3}>
+                <Grid item lg={12} sm={12} xs={12}>
+                  <TextField
+                    label="Email"
+                    type="text"
+                    id="email"
+                    value={emailValue}
+                    onChange={emailChangeHandler}
+                    onBlur={emailBlurHandler}
+                    variant="outlined"
+                    error={emailHasError || isError}
+                    disabled={ctx.isLoading}
+                    fullWidth
+                  />
+                  {emailHasError && (
+                    <p className="error-text">
+                      Please enter a valid email address.
+                    </p>
+                  )}
+                </Grid>
+                <Grid item lg={12} sm={12} xs={12}>
+                  <TextField
+                    label="Password"
+                    type="password"
+                    id="password"
+                    variant="outlined"
+                    value={passwordValue}
+                    onChange={passwordChangeHandler}
+                    onBlur={passwordBlurHandler}
+                    error={passwordHasError || isError}
+                    fullWidth
+                    disabled={ctx.isLoading}
+                  />
+                  {passwordHasError && (
+                    <p className="error-text">
+                      Password field must not be empty
+                    </p>
+                  )}
+                </Grid>
+                <Grid item lg={12} sm={12} xs={12}>
+                  {isError && (
+                    <Box>
+                      <Typography>Invalid Credentials</Typography>
+                    </Box>
+                  )}
+                </Grid>
+                <Grid item lg={12} sm={12} xs={12}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
+                  >
+                    <Link component={RouterLink} to="/signup">
+                      New user? Create an account
+                    </Link>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={!formIsValid || ctx.isLoading}
+                    >
+                      SIGN IN
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </form>
+          ) : (
             <Grid container spacing={3}>
               <Grid item lg={12} sm={12} xs={12}>
-                <TextField
-                  label="Email"
-                  type="text"
-                  id="email"
-                  value={emailValue}
-                  onChange={emailChangeHandler}
-                  onBlur={emailBlurHandler}
-                  variant="outlined"
-                  error={emailHasError || isError}
-                  fullWidth
-                />
-                {emailHasError && (
-                  <p className="error-text">
-                    Please enter a valid email address.
-                  </p>
-                )}
-              </Grid>
-              <Grid item lg={12} sm={12} xs={12}>
-                <TextField
-                  label="Password"
-                  type="password"
-                  id="password"
-                  variant="outlined"
-                  value={passwordValue}
-                  onChange={passwordChangeHandler}
-                  onBlur={passwordBlurHandler}
-                  error={passwordHasError || isError}
-                  fullWidth
-                />
-                {passwordHasError && (
-                  <p className="error-text">Password field must not be empty</p>
-                )}
-              </Grid>
-              <Grid item lg={12} sm={12} xs={12}>
-                {isError && (
-                  <Box>
-                    <Typography>Invalid Credentials</Typography>
-                  </Box>
-                )}
-              </Grid>
-              <Grid item lg={12} sm={12} xs={12}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row-reverse",
-                    width: "100%",
-                  }}
-                >
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={isLoading}
-                    // disabled={!formIsValid}
-                  >
-                    SIGN IN
-                  </Button>
-                </Box>
+                <Box sx={{ width: "100%" }}>Signed In</Box>
               </Grid>
             </Grid>
-          </form>
+          )}
         </Paper>
       </Box>
     </Container>

@@ -16,10 +16,10 @@ import { useNavigate } from "react-router-dom";
 import UserContext from "../../store/UserContext/user-context";
 import { getAuth, signOut } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
+import { CircularProgress } from "@mui/material";
 
-
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard"];
+const pages = ["Home", "Products", "Pets", "Pricing", "Blog"];
+const settings = ["Profile", "Account", "Dashboard", "Sign Out"];
 
 const UserResponsiveAppBar = () => {
   const ctx = React.useContext(UserContext);
@@ -27,13 +27,28 @@ const UserResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  const navLinkClickHandler = (event) => {
+    handleCloseNavMenu();
+    if (event.target.textContent === "Products") {
+      navigate("/userhome/buyproducts");
+    }
+    if (event.target.textContent === "Home") {
+      navigate("/");
+    }
+    if (event.target.textContent === "Pets") {
+      navigate("/userhome/buypets");
+    }
+    console.log(event.target.textContent);
+  };
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
-
+  const signInClickHandler = () => {
+    navigate("/signin");
+  };
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
@@ -42,11 +57,20 @@ const UserResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
   const handleUserMenuSignOut = () => {
+    ctx.setLoading(true);
     ctx.signOutUser();
 
     // setAnchorElUser(null);
     // navigate("/");
-    
+  };
+
+  const userMenuLinkClickHandler = (event) => {
+    if (event.target.textContent === "Sign Out") {
+      handleUserMenuSignOut();
+    }
+    if (event.target.textContent === "Profile") {
+      console.log("profile link clicked");
+    }
   };
 
   return (
@@ -105,7 +129,10 @@ const UserResponsiveAppBar = () => {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page}
+                  onClick={navLinkClickHandler} /*onClick={handleCloseNavMenu}*/
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -134,7 +161,8 @@ const UserResponsiveAppBar = () => {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                // onClick={handleCloseNavMenu}
+                onClick={navLinkClickHandler}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
@@ -142,43 +170,64 @@ const UserResponsiveAppBar = () => {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          {ctx.signedIn && !ctx.isLoading && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <Box key="namefield" marginLeft={2}>
+                  <Typography textAlign="left">
+                    Name: {localStorage.getItem("name")}
+                  </Typography>
+                </Box>
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting}
+                    onClick={userMenuLinkClickHandler}
+                    // onClick={handleCloseUserMenu}
+                  >
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))}
+                {/* <MenuItem key="logout" onClick={handleUserMenuSignOut}>
+                  <Typography textAlign="center">Log Out</Typography>
+                </MenuItem> */}
+              </Menu>
+            </Box>
+          )}
+          {!ctx.signedIn && !ctx.isLoading && (
+            <Button
+              key={"signin"}
+              onClick={signInClickHandler}
+              sx={{ color: "#fff" }}
             >
-              <Box key="namefield" marginLeft={2}>
-                <Typography textAlign="left">
-                  Name: {localStorage.getItem("name")}
-                </Typography>
-              </Box>
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-              <MenuItem key="logout" onClick={handleUserMenuSignOut}>
-                <Typography textAlign="center">Log Out</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
+              Sign In
+            </Button>
+          )}
+
+          {ctx.isLoading && (
+            <Box sx={{ display: "flex" }}>
+              <CircularProgress color="warning" />
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>
