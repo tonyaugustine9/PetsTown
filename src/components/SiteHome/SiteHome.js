@@ -1,7 +1,8 @@
 import React from "react";
+import ImportSiteHome from "./ImportSiteHome/ImportSiteHome";
 
 function SiteHome() {
-  return <div className="home">SiteHome</div>;
+  return <ImportSiteHome />;
 }
 
 export default SiteHome;

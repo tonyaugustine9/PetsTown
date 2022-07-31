@@ -81,7 +81,7 @@ const userReducer = (state, action) => {
     console.log(action.item.firstname);
     console.log(action.item.lastname);
     return {
-      firsNname: action.item.firstname,
+      firstName: action.item.firstname,
       lastName: action.item.lastname,
       email: action.item.email,
       password: action.item.password,

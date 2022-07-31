@@ -259,6 +259,8 @@ const AddPetDialog = (props) => {
   };
 
   // console.log(open);
+  console.log(ctx.firstName);
+  console.log(ctx.lastName);
   return (
     <div>
       <Dialog
@@ -266,7 +268,7 @@ const AddPetDialog = (props) => {
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
-        maxWidth
+        maxWidth="true"
         scroll="paper"
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
@@ -278,7 +280,11 @@ const AddPetDialog = (props) => {
         <DialogContent dividers tabIndex={-1} ref={descriptionElementRef}>
           {ctx.signedIn && (
             <Box
-              sx={{ display: "flex", flexDirection: "column", rowGap: "20px" }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                rowGap: "20px",
+              }}
             >
               <DialogContentText id="alert-dialog-slide-description">
                 Let Google help apps determine location. This means sending
@@ -468,7 +474,7 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
               </Grid>
               <Typography>Contact Details</Typography>
               <Grid container spacing={2}>
-                <Grid item lg={4} sm={4} xs={4}>
+                {/* <Grid item lg={4} sm={4} xs={4}>
                   <TextField
                     type="text"
                     id="contactname"
@@ -484,8 +490,8 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
                   {contactNameHasError && (
                     <p className="error-text">Please enter a contact name</p>
                   )}
-                </Grid>
-                {/* <Grid item lg={4} sm={4} xs={6}>
+                </Grid> */}
+                <Grid item lg={4} sm={4} xs={6}>
                   <TextField
                     type="text"
                     id="contactname"
@@ -501,8 +507,8 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
                   />
                   {/* {phoneNoHasError && (
                   <p className="error-text">Please enter a 10 digit Phone No</p>
-                )} 
-                </Grid> */}
+                )}  */}
+                </Grid>
                 <Grid item lg={4} sm={4} xs={6}>
                   <TextField
                     type="text"

@@ -63,7 +63,7 @@ const PetDataProvider = (props) => {
 
         // console.log(item.id);
       });
-      // console.log(loadedPets);
+      console.log(loadedPets);
       // setPets(loadedPets);
       dispatchPetDataAction({ type: "REFRESH", item: loadedPets });
     });

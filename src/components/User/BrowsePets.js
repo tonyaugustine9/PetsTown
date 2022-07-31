@@ -15,36 +15,36 @@ const BrowsePets = () => {
   const collectionRef = collection(database, "petlist");
   const [modalOpen, setModalOpen] = useState(false);
 
-  const fetchPets = async () => {
-    getDocs(collectionRef).then((data) => {
-      const loadedPets = [];
+  // const fetchPets = async () => {
+  //   getDocs(collectionRef).then((data) => {
+  //     const loadedPets = [];
 
-      data.docs.forEach((item) => {
-        loadedPets.push({ ...item.data(), id: item.id });
-        console.log(item.id);
-      });
-      console.log(loadedPets);
-      setPets(loadedPets);
-    });
+  //     data.docs.forEach((item) => {
+  //       loadedPets.push({ ...item.data(), id: item.id });
+  //       console.log(item.id);
+  //     });
+  //     console.log(loadedPets);
+  //     setPets(loadedPets);
+  //   });
 
-    console.log("in fetch pets");
-    const response = await getDocs(collectionRef);
-    // response.forEach((item) => {
-    //   loadedPets.push({ ...item.data(), id: item.id });
-    //   console.log(item.id);
-    // });
-    // if (response.exists()) {
-    //   console.log("response exists");
-    //   const loadedPets = [];
+  //   console.log("in fetch pets");
+  //   const response = await getDocs(collectionRef);
+  //   // response.forEach((item) => {
+  //   //   loadedPets.push({ ...item.data(), id: item.id });
+  //   //   console.log(item.id);
+  //   // });
+  //   // if (response.exists()) {
+  //   //   console.log("response exists");
+  //   //   const loadedPets = [];
 
-    //   response.docs.forEach((item) => {
-    //     loadedPets.push({ ...item.data(), id: item.id });
-    //     console.log(item.id);
-    //   });
-    //   setPets(loadedPets);
-    // }
-    console.log(response);
-  };
+  //   //   response.docs.forEach((item) => {
+  //   //     loadedPets.push({ ...item.data(), id: item.id });
+  //   //     console.log(item.id);
+  //   //   });
+  //   //   setPets(loadedPets);
+  //   // }
+  //   console.log(response);
+  // };
 
   // useEffect(() => {
   //   fetchPets();
@@ -58,7 +58,7 @@ const BrowsePets = () => {
   };
   console.log(modalOpen);
   const petList = ctx.petData.map((pet) => (
-    <Grid item xs={6} md={3} key={pet} minWidth="240px" maxWidth="240px">
+    <Grid item xs={6} md={3} key={pet.id} minWidth="240px" maxWidth="240px">
       <Paper
         key={pet.id}
         elevation={5}
@@ -67,7 +67,7 @@ const BrowsePets = () => {
       >
         <img src={pet.picture} alt="petdog" width="100%" height="200rem" />
         <Box sx={{ paddingX: 1, paddingBottom: 1 }}>
-          <Typography variant="h3" component="h8">
+          <Typography variant="h3" component="h6">
             {pet.name}
           </Typography>
           <Box
@@ -80,7 +80,7 @@ const BrowsePets = () => {
             <Typography> . </Typography>
             <Typography>{pet.breed}</Typography>
           </Box>
-          <Typography>{pet.location}</Typography>
+          <Typography>{pet.city}</Typography>
         </Box>
       </Paper>
     </Grid>
@@ -108,7 +108,7 @@ const BrowsePets = () => {
             // display: "flex",
             // flexDirection: "column",
             // rowGap: "20px",
-            backgroundColor: "black",
+            // backgroundColor: "black",
             // marginLeft: "20px",
             marginTop: "10px",
           }}

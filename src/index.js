@@ -19,6 +19,9 @@ import BrowseProducts from "./components/products/BrowseProducts";
 // import SignUp from "./components/Account Authentication/SignUp/SignUp";
 import SignUpWrapper from "./components/Account Authentication/SignUp/SignUpWraper";
 import BrowsePetsWrapper from "./components/Pets/BrowsePets/BrowsePetsWrapper";
+import MyPets from "./components/Pets/MyPets/MyPets";
+import MyPetsWrapper from "./components/Pets/MyPets/MyPetsWrapper/MyPetsWrapper";
+import CartProvider from "./store/CartContext/CartProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -26,25 +29,28 @@ root.render(
     <CssBaseline />
     <BrowserRouter>
       <UserProvider>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route path="userhome" element={<UserHome />}>
-              <Route index element={<ShopCategory />} />
-              <Route path="buyproducts" element={<Products />}>
-                <Route index element={<BrowseProducts />} />
-                <Route path=":productId" element={<ProductItemPage />} />
+        <CartProvider>
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route path="userhome" element={<UserHome />}>
+                <Route index element={<ShopCategory />} />
+                <Route path="buyproducts" element={<Products />}>
+                  <Route index element={<BrowseProducts />} />
+                  <Route path=":productId" element={<ProductItemPage />} />
+                </Route>
+                <Route path="buypets" element={<BuyPets />}>
+                  <Route index element={<BrowsePets />} />
+                  <Route path=":petId" element={<ViewPet />} />
+                  <Route path="mylistedpets" element={<MyPets />} />
+                </Route>
               </Route>
-              <Route path="buypets" element={<BuyPets />}>
-                <Route index element={<BrowsePets />} />
-                <Route path=":petId" element={<ViewPet />} />
-              </Route>
-            </Route>
-            <Route path="signin" element={<SignIn />} />
-            <Route index element={<SiteHome />} />
+              <Route path="signin" element={<SignIn />} />
+              <Route index element={<SiteHome />} />
 
-            <Route path="signup" element={<SignUpWrapper />} />
-          </Route>
-        </Routes>
+              <Route path="signup" element={<SignUpWrapper />} />
+            </Route>
+          </Routes>
+        </CartProvider>
       </UserProvider>
     </BrowserRouter>
   </React.StrictMode>

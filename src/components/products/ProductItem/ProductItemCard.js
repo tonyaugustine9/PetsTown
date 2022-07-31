@@ -4,10 +4,15 @@ import { useNavigate } from "react-router-dom";
 const ProductItemCard = (props) => {
   const navigate = useNavigate();
   return (
-    <Grid item xs={8} md={4}>
+    <Grid item xs={6} md={3}>
       <Paper
         elevation={5}
-        sx={{ borderRadius: "25px", overflow: "hidden" }}
+        sx={{
+          borderRadius: "25px",
+          overflow: "hidden",
+          minWidth: "236px",
+          maxWidth: "236px",
+        }}
         onClick={() => navigate(`/userhome/buyproducts/${props.data.id}`)}
       >
         <img
@@ -16,10 +21,12 @@ const ProductItemCard = (props) => {
           width="100%"
           height="200rem"
         />
-        <Box sx={{ paddingX: 1, paddingBottom: 1 }}>
-          <Typography align="center" variant="h5" component="h3">
-            {props.data.name}
-          </Typography>
+        <Box sx={{ paddingX: 1 /*paddingBottom: 1 */ }}>
+          <Box minHeight="64px">
+            <Typography align="center" variant="h5" component="h3">
+              {props.data.name}
+            </Typography>
+          </Box>
           <Box
             display={"flex"}
             flexWrap={"wrap"}
@@ -29,11 +36,7 @@ const ProductItemCard = (props) => {
           >
             <Typography>Brand: {props.data.brand}</Typography>
 
-            <Typography>Category: {props.data.category}</Typography>
-
-            <Typography variant="h4" component="h3">
-              RS: {props.data.price}
-            </Typography>
+            <Typography variant="h6">RS: {props.data.price}</Typography>
           </Box>
         </Box>
       </Paper>

@@ -17,6 +17,9 @@ import UserContext from "../../store/UserContext/user-context";
 import { getAuth, signOut } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { CircularProgress } from "@mui/material";
+import { Link as RouterLink, MemoryRouter } from "react-router-dom";
+import HeaderCartButton from "../products/Layout/HeaderCartButton/HeaderCartButton";
+import Cart from "../products/Cart/Cart/Cart";
 
 const pages = ["Home", "Products", "Pets", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Sign Out"];
@@ -26,6 +29,7 @@ const UserResponsiveAppBar = () => {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [cartIsShown, setCartIsShown] = React.useState(false);
 
   const navLinkClickHandler = (event) => {
     handleCloseNavMenu();
@@ -73,11 +77,20 @@ const UserResponsiveAppBar = () => {
     }
   };
 
+  const showCartHandler = () => {
+    setCartIsShown(true);
+  };
+
+  const hideCartHandler = () => {
+    setCartIsShown(false);
+  };
+
   return (
     <AppBar
       position="fixed"
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     >
+      {cartIsShown && <Cart onClose={hideCartHandler} />}
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -171,46 +184,62 @@ const UserResponsiveAppBar = () => {
           </Box>
 
           {ctx.signedIn && !ctx.isLoading && (
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <Box key="namefield" marginLeft={2}>
-                  <Typography textAlign="left">
-                    Name: {localStorage.getItem("name")}
-                  </Typography>
-                </Box>
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting}
-                    onClick={userMenuLinkClickHandler}
-                    // onClick={handleCloseUserMenu}
-                  >
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
-                {/* <MenuItem key="logout" onClick={handleUserMenuSignOut}>
+            <Box sx={{ display: "flex", columnGap: "10px" }}>
+              <Box sx={{ flexGrow: 0 }}>
+                <HeaderCartButton onClick={showCartHandler} />
+              </Box>
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/2.jpg"
+                    />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <Box key="namefield" marginLeft={2}>
+                    <Typography textAlign="left">
+                      Name: {localStorage.getItem("name")}
+                    </Typography>
+                  </Box>
+                  {settings.map((setting) => (
+                    <MenuItem
+                      key={setting}
+                      onClick={userMenuLinkClickHandler}
+                      // onClick={handleCloseUserMenu}
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                  {/* <MenuItem key="logout" onClick={handleUserMenuSignOut}>
                   <Typography textAlign="center">Log Out</Typography>
                 </MenuItem> */}
-              </Menu>
+                  <MenuItem
+                    component={RouterLink}
+                    to="/userhome/buypets/mylistedpets"
+                    // component={<RouterLink to="/userhome/mylistedpets" />}
+                    // containerElement={<RouterLink to="/userhome/mylistedpets" />}
+                  >
+                    <Typography textAlign="center">My Listed Pets</Typography>
+                  </MenuItem>
+                </Menu>
+              </Box>
             </Box>
           )}
           {!ctx.signedIn && !ctx.isLoading && (
