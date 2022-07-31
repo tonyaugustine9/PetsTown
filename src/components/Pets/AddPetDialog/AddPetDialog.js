@@ -23,10 +23,12 @@ import {
   MenuItem,
   Typography,
   IconButton,
+  LinearProgress,
 } from "@mui/material";
 import cities from "../../Account Authentication/SignUp/constants/cities";
 import { width } from "@mui/system";
 import dogBreeds from "../constants/dogbreeds";
+import catBreeds from "../constants/catbreeds";
 import UserContext from "../../../store/UserContext/user-context";
 import { storage } from "../../../firebaseConfig";
 import {
@@ -55,6 +57,9 @@ const AddPetDialog = (props) => {
   const [petHealthValue, setPetHealthValue] = React.useState("");
   const [formIsValid, setFormIsValid] = React.useState(false);
   const [inputImage, setInputImage] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isError, setIsError] = React.useState(false);
+  const [formSubmitted, setFormSubmited] = React.useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -138,8 +143,7 @@ const AddPetDialog = (props) => {
         petTypeValue !== "" &&
         petSizeValue !== "" &&
         dogBreedValue !== null &&
-        inputImage !== null &&
-        contactNameIsValid
+        inputImage !== null
     );
   }, [
     cityValue,
@@ -155,7 +159,7 @@ const AddPetDialog = (props) => {
     inputImage,
   ]);
 
-  // console.log(formIsValid);
+  console.log(formIsValid);
 
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
@@ -168,6 +172,9 @@ const AddPetDialog = (props) => {
   }, [open]);
 
   const addPetFireBase = () => {
+    setIsLoading(true);
+    setIsError(false);
+    setFormSubmited(false);
     const data = {
       userid: ctx.uid,
       size: petSizeValue,
@@ -216,6 +223,9 @@ const AddPetDialog = (props) => {
       },
       (error) => {
         // Handle unsuccessful uploads
+        setIsLoading(false);
+        setIsError(true);
+        setFormSubmited(true);
         console.log("some error occured when uploading image");
       },
       () => {
@@ -231,15 +241,16 @@ const AddPetDialog = (props) => {
           })
             .then((docRef) => {
               // setActiveStep((prevActiveStep) => prevActiveStep + 1);
-              // setFormValid(true);
-              // setIsLoading(false);
-              // setIsError(false);
+              setFormSubmited(true);
+              setIsLoading(false);
+              setIsError(false);
               console.log("doc added");
               console.log(docRef.id);
             })
             .catch(() => {
-              // setIsLoading(false);
-              // setIsError(true);
+              setIsLoading(false);
+              setIsError(true);
+              setFormSubmited(true);
               console.log("error adding doc");
             });
         });
@@ -264,16 +275,21 @@ const AddPetDialog = (props) => {
   return (
     <div>
       <Dialog
-        open={open}
+        open
         TransitionComponent={Transition}
         keepMounted
-        onClose={handleClose}
+        onClose={props.onModalClose}
         maxWidth="true"
         scroll="paper"
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
         // fullScreen
       >
+        {isLoading && (
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+          </Box>
+        )}
         <DialogTitle id="scroll-dialog-title">
           {"Add your pet to the website"}
         </DialogTitle>
@@ -419,9 +435,9 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
                     size="small"
                     value={dogBreedValue}
                     onChange={dogBreedChangeHandler}
-                    options={dogBreeds}
+                    options={petTypeValue === "Dog" ? dogBreeds : catBreeds}
                     renderInput={(params) => (
-                      <TextField size="small" {...params} label="Dog Breed" />
+                      <TextField size="small" {...params} label="Breed" />
                     )}
                   />
                 </Grid>

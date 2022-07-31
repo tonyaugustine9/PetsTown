@@ -1,5 +1,14 @@
 import BasicDrawer from "../ui/BasicDrawer";
-import { Box, Button, Container, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  createTheme,
+  Grid,
+  Paper,
+  Skeleton,
+  Typography,
+} from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
@@ -7,6 +16,19 @@ import { database } from "../../firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import PetDataContext from "../../store/PetDataContext/petdata-context";
 import AddPetDialog from "../Pets/AddPetDialog/AddPetDialog";
+
+const theme = createTheme({
+  palette: {
+    neutral: {
+      main: "#64748B",
+      contrastText: "#fff",
+    },
+    dkblue: {
+      main: "#02051b",
+      contrastText: "#fff",
+    },
+  },
+});
 
 const BrowsePets = () => {
   const ctx = useContext(PetDataContext);
@@ -49,24 +71,38 @@ const BrowsePets = () => {
   // useEffect(() => {
   //   fetchPets();
   // }, []);
-  const addPetHandler = () => {
-    setModalOpen(true);
-  };
 
   const modalCloseHandler = () => {
     setModalOpen(false);
   };
+
+  const modalOpenHandler = () => {
+    setModalOpen(true);
+  };
+
   console.log(modalOpen);
   const petList = ctx.petData.map((pet) => (
-    <Grid item xs={6} md={3} key={pet.id} minWidth="240px" maxWidth="240px">
+    <Grid item xs={4} md={2.6} key={pet.id} minWidth="240px" maxWidth="240px">
       <Paper
         key={pet.id}
         elevation={5}
-        sx={{ borderRadius: "25px", overflow: "hidden" }}
+        sx={{
+          borderRadius: "25px",
+          overflow: "hidden",
+          backgroundColor: "lightgray",
+        }}
         onClick={() => navigate(`/userhome/buypets/${pet.id}`)}
       >
         <img src={pet.picture} alt="petdog" width="100%" height="200rem" />
-        <Box sx={{ paddingX: 1, paddingBottom: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            paddingX: 1,
+            paddingBottom: 1,
+          }}
+        >
           <Typography variant="h3" component="h6">
             {pet.name}
           </Typography>
@@ -88,18 +124,31 @@ const BrowsePets = () => {
   return (
     <Box sx={{ display: "flex" /* marginTop: "10px" */ }}>
       {/* <AddPetDialog onModalClose={modalCloseHandler} isModelOpen={modalOpen} /> */}
-      <BasicDrawer />
-      <AddPetDialog />
-      <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+      {/* <BasicDrawer /> */}
+      {modalOpen && <AddPetDialog onModalClose={modalCloseHandler} />}
+      <Box
+        sx={{
+          display: "flex",
+          // marginTop: "10px",
+          flexDirection: "column",
+          width: "100%",
+        }}
+      >
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
             rowGap: "10px",
-            // backgroundColor: "blue",
+            backgroundColor: "lightgray",
+            paddingX: "20px",
+            paddingY: "20px",
           }}
         >
-          <Button variant="contained" onClick={addPetHandler}>
+          <Button
+            variant="contained"
+            onClick={modalOpenHandler}
+            sx={{ backgroundColor: "black" }}
+          >
             <Typography>Add Your Pet</Typography>
           </Button>
         </Box>
@@ -125,6 +174,7 @@ const BrowsePets = () => {
           <Grid container spacing={6}>
             {petList}
           </Grid>
+
           {/* </Box> */}
         </Container>
       </Box>

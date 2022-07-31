@@ -92,9 +92,11 @@ const MyPets = () => {
           marginTop: "10px",
         }}
       >
-        <Grid container spacing={6}>
-          {petList}
-        </Grid>
+        {myPets && (
+          <Grid container spacing={6}>
+            {petList}
+          </Grid>
+        )}
       </Container>
       {/* </Box> */}
     </Box>

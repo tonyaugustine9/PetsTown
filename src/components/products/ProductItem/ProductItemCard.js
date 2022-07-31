@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const ProductItemCard = (props) => {
   const navigate = useNavigate();
   return (
-    <Grid item xs={6} md={3}>
+    <Grid item xs={4} md={3}>
       <Paper
         elevation={5}
         sx={{

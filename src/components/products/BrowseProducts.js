@@ -49,7 +49,7 @@ const BrowseProducts = () => {
   return (
     <Box sx={{ display: "flex" }}>
       {/* <MealsSummary /> */}
-      <BasicDrawer />
+      {/* <BasicDrawer /> */}
       <Container
         sx={{
           marginTop: "30px",

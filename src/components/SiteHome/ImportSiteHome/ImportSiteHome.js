@@ -13,15 +13,15 @@ import "./ImportSiteHome.css";
 const ImportSiteHome = () => (
   <div className="App">
     <div className="gradient__bg">
-      <Navbar />
+      {/* <Navbar /> */}
       <Header />
     </div>
-    {/* <Brand />
+    {/* <Brand /> */}
     <WhatGPT3 />
-    <Features />
-    <Possibility />
-    <CTA />
-    <Blog /> */}
+    {/* <Features /> */}
+    {/* <Possibility /> */}
+    {/* <CTA />  */}
+    {/* <Blog /> */}
     {/* <Footer /> */}
   </div>
 );
