@@ -10,8 +10,6 @@ const ProductItemCard = (props) => {
         sx={{
           borderRadius: "25px",
           overflow: "hidden",
-          minWidth: "236px",
-          maxWidth: "236px",
         }}
         onClick={() => navigate(`/userhome/buyproducts/${props.data.id}`)}
       >
@@ -21,10 +19,18 @@ const ProductItemCard = (props) => {
           width="100%"
           height="200rem"
         />
-        <Box sx={{ paddingX: 1 /*paddingBottom: 1 */ }}>
+        <Box
+          sx={{
+            paddingX: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            paddingBottom: 1,
+          }}
+        >
           <Box minHeight="64px">
             <Typography align="center" variant="h5" component="h3">
-              {props.data.name}
+              {`${props.data.name.slice(0, 34)} ..`}
             </Typography>
           </Box>
           <Box

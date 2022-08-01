@@ -30,13 +30,14 @@ const ViewPet = () => {
     <Grid container spacing={6} sx={{ marginTop: "30px" }}>
       {petData && (
         <>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={12} lg={5}>
             <Box
               sx={{
                 display: "flex",
                 marginTop: "10px",
                 justifyContent: "center",
-                maxHeight: "27rem",
+                maxHeight: "400px",
+                marginLeft: "30px",
               }}
             >
               <Paper
@@ -53,7 +54,7 @@ const ViewPet = () => {
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={12} lg={4}>
             <Box
               sx={{
                 display: "flex",
@@ -65,7 +66,7 @@ const ViewPet = () => {
                 sx={{
                   padding: "20px",
                   borderRadius: "25px",
-                  minWidth: "600px",
+                  minWidth: "550px",
                   overflow: "hidden",
                   // backgroundColor: "lightgray",
                 }}
@@ -83,7 +84,7 @@ const ViewPet = () => {
                   <Typography>Breed: {petData.breed}</Typography>
                   <Typography>Age: {petData.age}</Typography>
                   <Typography>Health Status: {petData.health}</Typography>
-                  <Typography>size: {petData.size}</Typography>
+                  <Typography>Size: {petData.size}</Typography>
                 </Box>
                 <Typography>City: {petData.city}</Typography>
               </Paper>
@@ -100,7 +101,7 @@ const ViewPet = () => {
                   borderRadius: "25px",
                   overflow: "hidden",
                   // backgroundColor: "lightgray",
-                  minWidth: "600px",
+                  minWidth: "550px",
                 }}
               >
                 <Typography variant="h2" component="h3">

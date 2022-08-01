@@ -5,9 +5,10 @@ import UserContext from "../../../store/UserContext/user-context";
 import { database } from "../../../firebaseConfig";
 import PetDataContext from "../../../store/PetDataContext/petdata-context";
 import AddPetDialog from "../AddPetDialog/AddPetDialog";
+import { useNavigate } from "react-router-dom";
 
 const MyPets = () => {
-  const myPetsList = [];
+  const navigate = useNavigate();
   const myPetsListID = [];
   // const [myPetsID, setMyPetsID] = useState([]);
   const [myPets, setMyPets] = useState([]);
@@ -16,30 +17,34 @@ const MyPets = () => {
   // console.log(ctx.uid);
 
   const fetchMyPets = async () => {
-    const collectionRef = collection(database, "userdata", ctx.uid, "userpets");
+    const myPetsList = [];
+    console.log("My id ", ctx.uid);
+    const collectionRef = collection(database, "petlist");
     getDocs(collectionRef).then((data) => {
       data.docs.forEach((item) => {
-        myPetsList.push({ ...item.data(), id: item.id });
+        console.log(item.data().uid);
+        if (ctx.uid == item.data().userid)
+          myPetsList.push({ ...item.data(), id: item.id });
       });
-      console.log("My Pets List ", myPetsList);
-      const myPetsListID = myPetsList.map((item) => item.petid);
-      console.log("My pets Id", myPetsListID);
-      const myPetData = [];
-      myPetsListID.forEach((item) => {
-        const fetchPetDoc = async () => {
-          const docRef = doc(database, "petlist", item);
+      // console.log("My Pets List ", myPetsList);
+      // const myPetsListID = myPetsList.map((item) => item.petid);
+      // console.log("My pets Id", myPetsListID);
+      // const myPetData = [];
+      // myPetsListID.forEach((item) => {
+      //   const fetchPetDoc = async () => {
+      //     const docRef = doc(database, "petlist", item);
 
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            myPetData.push({ ...docSnap.data(), id: docSnap.id });
-          } else {
-            console.log("No such document!");
-          }
-        };
-        fetchPetDoc();
-      });
-      console.log("My pet data", myPetData);
-      setMyPets(myPetData);
+      //     const docSnap = await getDoc(docRef);
+      //     if (docSnap.exists()) {
+      //       myPetData.push({ ...docSnap.data(), id: docSnap.id });
+      //     } else {
+      //       console.log("No such document!");
+      //     }
+      //   };
+      //   fetchPetDoc();
+      // });
+      console.log("My pet data", myPetsList);
+      setMyPets(myPetsList);
     });
 
     console.log("in fetch pets");
@@ -55,15 +60,32 @@ const MyPets = () => {
   const petList = myPets.map((pet) => (
     // if (myPetsListID.includes(pet))
     // myPetsListID.includes(pet.id) && (
-    <Grid item xs={3} md={2} key={pet.id} /*minWidth="240px" maxWidth="240px"*/>
+    <Grid
+      item
+      xs={4}
+      md={2.8}
+      key={pet.id} /*minWidth="240px" maxWidth="240px"*/
+    >
       <Paper
         key={pet.id}
         elevation={5}
-        sx={{ borderRadius: "25px", overflow: "hidden" }}
-        // onClick={() => navigate(`/userhome/buypets/${pet.id}`)}
+        sx={{
+          borderRadius: "25px",
+          overflow: "hidden",
+          backgroundColor: "lightgray",
+        }}
+        onClick={() => navigate(`/userhome/buypets/${pet.id}`)}
       >
         <img src={pet.picture} alt="petdog" width="100%" height="200rem" />
-        <Box sx={{ paddingX: 1, paddingBottom: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            paddingX: 1,
+            paddingBottom: 1,
+          }}
+        >
           <Typography variant="h3" component="h6">
             {pet.name}
           </Typography>
@@ -88,15 +110,15 @@ const MyPets = () => {
       {/* <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}> */}
       <Container
         sx={{
-          backgroundColor: "black",
           marginTop: "10px",
         }}
       >
-        {myPets && (
+        {myPets && ctx.signedIn && (
           <Grid container spacing={6}>
             {petList}
           </Grid>
         )}
+        {!ctx.signedIn && <Box>Sign in first</Box>}
       </Container>
       {/* </Box> */}
     </Box>

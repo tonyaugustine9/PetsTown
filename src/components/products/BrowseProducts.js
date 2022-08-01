@@ -55,7 +55,7 @@ const BrowseProducts = () => {
           marginTop: "30px",
         }}
       >
-        <Grid container spacing={6}>
+        <Grid container spacing={6} paddingBottom={3}>
           {isLoading &&
             !httpError &&
             Array.from(new Array(8)).map((item, index) => (

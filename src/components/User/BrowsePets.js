@@ -36,7 +36,8 @@ const BrowsePets = () => {
   const [pets, setPets] = useState([]);
   const collectionRef = collection(database, "petlist");
   const [modalOpen, setModalOpen] = useState(false);
-
+  const [animalType, setAnimalType] = useState(["Dog", "Cat", "Other"]);
+  const [animalBreed, setAnimalBreed] = useState([]);
   // const fetchPets = async () => {
   //   getDocs(collectionRef).then((data) => {
   //     const loadedPets = [];
@@ -80,51 +81,84 @@ const BrowsePets = () => {
     setModalOpen(true);
   };
 
+  const animalTypeChangeHandler = (value) => {
+    setAnimalType(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+  const animalBreedChangeHandler = (value) => {
+    setAnimalBreed(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  console.log(animalType);
+  console.log(animalBreed);
+  // ctx.petData.forEach((x) => {
+  //   console.log(x.type);
+  // });
   console.log(modalOpen);
-  const petList = ctx.petData.map((pet) => (
-    <Grid item xs={4} md={2.6} key={pet.id} minWidth="240px" maxWidth="240px">
-      <Paper
-        key={pet.id}
-        elevation={5}
-        sx={{
-          borderRadius: "25px",
-          overflow: "hidden",
-          backgroundColor: "lightgray",
-        }}
-        onClick={() => navigate(`/userhome/buypets/${pet.id}`)}
-      >
-        <img src={pet.picture} alt="petdog" width="100%" height="200rem" />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            paddingX: 1,
-            paddingBottom: 1,
-          }}
+  console.log(animalType.indexOf("Dog") > -1);
+  const petList = ctx.petData.map(
+    (pet) =>
+      animalType.indexOf(pet.type) > -1 &&
+      (animalBreed.length == 0 || animalBreed.indexOf(pet.breed) > -1) && (
+        <Grid
+          item
+          xs={6}
+          md={2.8}
+          key={pet.id}
+          minWidth="240px"
+          maxWidth="240px"
         >
-          <Typography variant="h3" component="h6">
-            {pet.name}
-          </Typography>
-          <Box
-            display={"flex"}
-            flexWrap={"wrap"}
-            alignItems={"center"}
-            justifyContent="space-between"
+          <Paper
+            key={pet.id}
+            elevation={5}
+            sx={{
+              borderRadius: "25px",
+              overflow: "hidden",
+              backgroundColor: "lightgray",
+            }}
+            onClick={() => navigate(`/userhome/buypets/${pet.id}`)}
           >
-            <Typography>{pet.gender}</Typography>
-            <Typography> . </Typography>
-            <Typography>{pet.breed}</Typography>
-          </Box>
-          <Typography>{pet.city}</Typography>
-        </Box>
-      </Paper>
-    </Grid>
-  ));
+            <img src={pet.picture} alt="petdog" width="100%" height="200rem" />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                paddingX: 1,
+                paddingBottom: 1,
+              }}
+            >
+              <Typography variant="h3" component="h6">
+                {pet.name}
+              </Typography>
+              <Box
+                display={"flex"}
+                flexWrap={"wrap"}
+                alignItems={"center"}
+                justifyContent="space-between"
+              >
+                <Typography>{pet.gender}</Typography>
+                <Typography> . </Typography>
+                <Typography>{pet.breed}</Typography>
+              </Box>
+              <Typography>{pet.city}</Typography>
+            </Box>
+          </Paper>
+        </Grid>
+      )
+  );
   return (
     <Box sx={{ display: "flex" /* marginTop: "10px" */ }}>
       {/* <AddPetDialog onModalClose={modalCloseHandler} isModelOpen={modalOpen} /> */}
-      {/* <BasicDrawer /> */}
+      <BasicDrawer
+        onAnimalTypeChange={animalTypeChangeHandler}
+        onAnimalBreedChange={animalBreedChangeHandler}
+      />
       {modalOpen && <AddPetDialog onModalClose={modalCloseHandler} />}
       <Box
         sx={{

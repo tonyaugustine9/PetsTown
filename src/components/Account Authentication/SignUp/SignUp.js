@@ -5,6 +5,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import PetsIcon from "@mui/icons-material/Pets";
 import { useNavigate } from "react-router-dom";
 import LinearProgress from "@mui/material/LinearProgress";
 import {
@@ -91,7 +92,7 @@ const SignUp = () => {
               lastname: userData.lastNameValue,
               firstname: userData.firstNameValue,
               email: userData.emailValue,
-              uid:uid
+              uid: uid,
             })
               .then(() => {
                 setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -170,19 +171,36 @@ const SignUp = () => {
             rowGap: "15px",
           }}
         >
-          <Box sx={{ margin: "auto" }}>
-            <PetsTownLogo />
+          <Box sx={{ margin: "auto" }} alignItems="center">
+            <PetsIcon fontSize="large" />
+            <Typography
+              variant="h4"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                ml: 1,
+                fontFamily: "monospace",
+                fontWeight: 1000,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              PETS TOWN
+            </Typography>
           </Box>
-
-          <Stepper activeStep={activeStep} alternativeLabel>
-            {steps.map((label, index) => {
-              return (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              );
-            })}
-          </Stepper>
+          <Box marginTop={3}>
+            <Stepper activeStep={activeStep} alternativeLabel>
+              {steps.map((label, index) => {
+                return (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                );
+              })}
+            </Stepper>
+          </Box>
           {activeStep === 0 && (
             <AuthCredentials
               onFormValidCheck={formValidCheckHandler}
@@ -231,9 +249,9 @@ const SignUp = () => {
                     Next
                   </Button>
                 )}
-                {activeStep === 3 && (
+                {/* {activeStep === 3 && (
                   <Button onClick={handleFinished}>Continue to Login</Button>
-                )}
+                )} */}
                 {activeStep === 2 && (
                   <Button
                     onClick={submissionHandler}

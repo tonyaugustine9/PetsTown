@@ -13,6 +13,8 @@ import Link from "@mui/material/Link";
 import { Link as RouterLink, MemoryRouter } from "react-router-dom";
 import UserContext from "../../store/UserContext/user-context";
 import { useContext } from "react";
+import PetsIcon from "@mui/icons-material/Pets";
+
 // import HorizontalLinearStepper from "../../HorizontalLinearStepper";
 
 const isNotEmpty = (value) => value.trim() !== "";
@@ -135,8 +137,24 @@ const Login = () => {
             rowGap: "15px",
           }}
         >
-          <Box sx={{ margin: "auto" }}>
-            <PetsTownLogo />
+          <Box sx={{ margin: "auto" }} alignItems="center">
+            <PetsIcon fontSize="large" />
+            <Typography
+              variant="h4"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                ml: 1,
+                fontFamily: "monospace",
+                fontWeight: 1000,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              PETS TOWN
+            </Typography>
           </Box>
 
           {!ctx.signedIn ? (
@@ -213,7 +231,15 @@ const Login = () => {
           ) : (
             <Grid container spacing={3}>
               <Grid item lg={12} sm={12} xs={12}>
-                <Box sx={{ width: "100%" }}>Signed In</Box>
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography>Signed In</Typography>
+                </Box>
               </Grid>
             </Grid>
           )}

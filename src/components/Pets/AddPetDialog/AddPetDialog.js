@@ -11,6 +11,7 @@ import { auth, database } from "../../../firebaseConfig";
 import { collection, doc, setDoc, addDoc } from "firebase/firestore";
 import { v4 as uuid } from "uuid";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import { useNavigate } from "react-router-dom";
 
 import {
   Grid,
@@ -46,6 +47,7 @@ const isNotEmpty = (value) => value.trim() !== "";
 const isPhoneNo = (value) => value.length === 10;
 
 const AddPetDialog = (props) => {
+  const navigate = useNavigate();
   const ctx = React.useContext(UserContext);
   const [open, setOpen] = React.useState(true);
   const [cityValue, setCityValue] = React.useState(null);
@@ -186,7 +188,7 @@ const AddPetDialog = (props) => {
       name: petNameValue,
       city: cityValue,
       contactdetails: {
-        name: contactNameValue,
+        name: `${ctx.firstName} ${ctx.lastName}`,
         phone: phoneNoValue,
         address: addressValue,
       },
@@ -250,7 +252,7 @@ const AddPetDialog = (props) => {
             .catch(() => {
               setIsLoading(false);
               setIsError(true);
-              setFormSubmited(true);
+              setFormSubmited(false);
               console.log("error adding doc");
             });
         });
@@ -263,6 +265,12 @@ const AddPetDialog = (props) => {
     addPetFireBase();
   };
 
+  const refreshHandler = (event) => {
+    event.preventDefault();
+    props.onModalClose();
+    window.location.reload(false);
+  };
+
   const inputImageChangeHandler = (e) => {
     if (e.target.files[0]) {
       setInputImage(e.target.files[0]);
@@ -270,8 +278,7 @@ const AddPetDialog = (props) => {
   };
 
   // console.log(open);
-  console.log(ctx.firstName);
-  console.log(ctx.lastName);
+
   return (
     <div>
       <Dialog
@@ -622,6 +629,7 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
               )}
             />
           </Box> */}
+              {isError && <Typography>Error sending data</Typography>}
             </Box>
           )}
           {!ctx.signedIn && <Typography>Sign in first</Typography>}
@@ -629,13 +637,25 @@ Praesent commodo cursus magna, vel scelerisque nisl consectetur et.`
         <DialogActions>
           {/* <Button onClick={handleClose}>Disagree</Button>
           <Button onClick={handleClose}>Agree</Button> */}
-          <Button
-            type="submit"
-            disabled={!formIsValid}
-            onClick={formSubmitHandler}
-          >
-            Submit
-          </Button>
+          {!formSubmitted && !isLoading && (
+            <Button
+              type="submit"
+              disabled={!formIsValid || isLoading}
+              onClick={formSubmitHandler}
+            >
+              Submit
+            </Button>
+          )}
+          {isLoading && (
+            <Button type="submit" disabled>
+              Submitting
+            </Button>
+          )}
+          {!isLoading && !isError && formSubmitted && (
+            <Button type="submit" onClick={refreshHandler}>
+              Close and Refresh
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>

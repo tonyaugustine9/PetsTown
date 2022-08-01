@@ -119,7 +119,7 @@ const UserResponsiveAppBar = () => {
                 mr: 2,
                 display: { xs: "none", md: "flex" },
                 fontFamily: "monospace",
-                fontWeight: 700,
+                fontWeight: 1000,
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
@@ -181,7 +181,7 @@ const UserResponsiveAppBar = () => {
                 display: { xs: "flex", md: "none" },
                 flexGrow: 1,
                 fontFamily: "monospace",
-                fontWeight: 700,
+                fontWeight: 1000,
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
@@ -189,7 +189,10 @@ const UserResponsiveAppBar = () => {
             >
               PETS TOWN
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            <Box
+              marginLeft={4}
+              sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
+            >
               {pages.map((page) => (
                 <Button
                   key={page}

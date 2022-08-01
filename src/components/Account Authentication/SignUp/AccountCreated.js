@@ -6,13 +6,17 @@ const AccountCreated = (props) => {
     props.onFormValidCheck(true);
   }, []);
   return (
-    <Box>
-      <Grid container spacing={2}>
-        <Grid item>
-          <Typography>Account Created</Typography>
-          <Typography>You can now login</Typography>
-        </Grid>
-      </Grid>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "400px",
+        alignContent: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Typography>Account Created</Typography>
+      <Typography>You can now continue browsing</Typography>
     </Box>
   );
 };
