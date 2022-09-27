@@ -24,7 +24,7 @@ import Cart from "../products/Cart/Cart/Cart";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const pages = ["Home", "Products", "Pets"];
-const settings = ["Profile", "Sign Out"];
+const settings = ["Sign Out"];
 const theme = createTheme({
   palette: {
     neutral: {
@@ -238,15 +238,7 @@ const UserResponsiveAppBar = () => {
                         Name: {ctx.firstName}
                       </Typography>
                     </Box>
-                    {settings.map((setting) => (
-                      <MenuItem
-                        key={setting}
-                        onClick={userMenuLinkClickHandler}
-                        // onClick={handleCloseUserMenu}
-                      >
-                        <Typography textAlign="center">{setting}</Typography>
-                      </MenuItem>
-                    ))}
+
                     {/* <MenuItem key="logout" onClick={handleUserMenuSignOut}>
                   <Typography textAlign="center">Log Out</Typography>
                 </MenuItem> */}
@@ -258,6 +250,15 @@ const UserResponsiveAppBar = () => {
                     >
                       <Typography textAlign="center">My Listed Pets</Typography>
                     </MenuItem>
+                    {settings.map((setting) => (
+                      <MenuItem
+                        key={setting}
+                        onClick={userMenuLinkClickHandler}
+                        // onClick={handleCloseUserMenu}
+                      >
+                        <Typography textAlign="center">{setting}</Typography>
+                      </MenuItem>
+                    ))}
                   </Menu>
                 </Box>
               </Box>

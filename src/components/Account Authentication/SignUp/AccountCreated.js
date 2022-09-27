@@ -17,6 +17,7 @@ const AccountCreated = (props) => {
     >
       <Typography>Account Created</Typography>
       <Typography>You can now continue browsing</Typography>
+      <Typography>Please refresh</Typography>
     </Box>
   );
 };
